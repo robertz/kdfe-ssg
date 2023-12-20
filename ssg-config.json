@@ -1,0 +1,17 @@
+{
+	"meta": {
+		"title": "KISDigital",
+		"description": "ColdFusion, ColdBox, CommandBox and other assorted musings",
+		"author": "Robert Zehnder",
+		"url": "https://kisdigital.com"
+	},
+	"outputDir": "_site",
+	"passthru": [
+		"/favicon.ico",
+		"/assets"
+	],
+	"ignore": [
+		"/_includes",
+		"/.netlify"
+	]
+}
