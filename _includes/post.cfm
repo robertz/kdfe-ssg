@@ -27,7 +27,7 @@
 						<i class="bi bi-linkedin px-1 text-white fs-5"></i>
 					</a>
 				</div>
-				<div class="my-3 text-white decorate-links post">
+				<div class="my-3 text-white post decorate-links">
 					#prc.content#
 				</div>
 				<cfinclude template="disqus.cfm" />

@@ -1,6 +1,7 @@
 ---
-type: page
-slug: commandbox-apiman
+type: project
+view: page
+title: commandbox-apiman
 ---
 ### commandbox-apiman
 
@@ -32,7 +33,7 @@ Supported commandline flags
 
 
 `❯ apiman get https://jsonplaceholder.typicode.com/todos/1`
-```json
+```js
 {
     "userId":1,
     "id":1,
@@ -49,7 +50,7 @@ If you need to pass query parameters you can either wrap the url in quotes to pa
 Can also be expressed as:
 
 `❯ apiman get -q "postId=1" https://jsonplaceholder.typicode.com/comments`
-```json
+```js
 [
     {
         "postId":1,
@@ -92,7 +93,7 @@ Can also be expressed as:
 ### Posting JSON data to a service
 
 `❯ apiman post http://localhost:8000/ui/auth/login -h "Content-Type=application/json" -d '{username : "admin", password : "commandbox" }'`
-```json
+```js
 {
     "data":{
         "isIdentified":true,
@@ -114,7 +115,7 @@ Can also be expressed as:
 
 `❯ apiman get https://api.stripe.com/v1/charges -u "YOUR_USERNAME_HERE"`
 
-```json
+```js	
 {
   "object": "list",
   "count": 45,

@@ -1,9 +1,9 @@
 ---
 layout: main
 type: post
-title: Wishing you a Merry Christmas
+title: Merry Christmas
 author: Robert Zehnder
-slug: merry-christmas-and-happy-new-year
+slug: merry-christmas
 publishDate: 2023-12-24 18:00:00
 published: false
 image: https://static.kisdigital.com/ssg/2023/santa-and-reindeer.jpeg

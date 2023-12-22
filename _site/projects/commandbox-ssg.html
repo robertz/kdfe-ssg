@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>KISDigital</title>
+	<meta name="description" content="ColdFusion, ColdBox, CommandBox and other assorted musings">
+	<meta name="author" content="Robert Zehnder">
+	<meta name="twitter:widgets:theme" content="light">
+	<meta name="twitter:widgets:border-color" content="#55acee">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism-themes/1.9.0/prism-one-dark.min.css" integrity="sha512-c6S8OdtvoqZCbMfA1lWE0qd368pLdFvVHVILQzNizfowC+zV8rmVKdSlmL5SuidvATO0A7awDg53axd+s/9amw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href="/assets/css/site.css?v=1703257225189">
+</head>
+<body style="padding-top: 70px;">
+	<header>
+		<nav class="header">
+			<div class="container">
+				<div class="row">
+					<div class="col-2">
+						<a class="site-link" href="/"><span style="color: var(--post-link-text)">KIS</span>Digital</a>
+					</div>
+					<div class="col-10"></div>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<div class="container text-white">
+<div class="row">
+	<div class="col-lg-8 col-md-12">
+		<div class="card rf-card-bordered text-white">
+			<div class="card-body">
+				<div class="card-text decorate-links">
+					<h3>commandbox-ssg</h3>
+<p>SSG is a static site generator implemented in CommandBox.
+<br></p>
+<h3>Installation</h3>
+<pre><code class="language-bash">box install commandbox-ssg
+</code></pre>
+<br>
+<h3>Commands</h3>
+<p>Installing commandbox-ssg will provide the <code>ssg</code> namespace which allows for these commands:</p>
+<ul>
+<li><strong>init</strong> - This command will scaffold a very basic blog site you can modify to fit your needs</li>
+<li><strong>build</strong> - This command will scan for *.md and *.cfm files in the current working directory and build html files that will be placed in the <code>_site</code> directory</li>
+<li><strong>watch</strong> - This command calls <code>ssg build</code> whenever a change is detected in the current working directory</li>
+<li><strong>serve</strong> - This command will start a static web server you can use to preview your site. It will also create the required <code>server.json</code> and <code>.htaccess</code> files if they do not exist.</li>
+</ul>
+<br>
+<h3>Getting Started (Quick)</h3>
+<pre><code class="language-bash">box
+mkdir my-test-site --cd
+echo &quot;### Hello from commandbox-ssg&quot; &gt; index.md
+ssg build
+ssg serve
+</code></pre>
+<br>
+<h3>How it works</h3>
+<p>Commandbox-ssg works using ColdBox modules you already know and love. Markdown is processed by the <a href="https://www.forgebox.io/view/cbmarkdown">cbMarkdown</a> module to
+return the generated HTML. Every markdown template has can have its own metadata associated with it, called front matter,
+using YAML and that is processed using the <a href="https://www.forgebox.io/view/cbyaml">cbYaml</a> module.</p>
+<p>When you run <code>ssg build</code> it will scan the current working directory and all subdirectories for Markdown and CFM files.
+Every file it finds it will attempt to read the front matter from the template and that data will be added to the <code>prc</code>
+scope for that page. The <code>prc</code> scope is nod to its ColdBox roots, every page has its own <code>prc</code> that encapsulates all the
+data required to render a page.</p>
+<p>As noted, <code>commandbox-ssg</code> checks every template for front matter and will add it to the pages <code>prc</code> scope if it exists.
+If you do provide front matter, it is required to start on the first line, otherwise it will be ignored. How it is
+denoted is determined by the template type.</p>
+<p>As an example, here is a front matter block for a markdown template.</p>
+<pre><code class="language-md">---
+type: project
+view: page
+title: commandbox-ssg
+---
+</code></pre>
+<p>Front matter start and front matter end is marked by <code>---</code> at the beginning and the end of the block.</p>
+<p>CFML templates work much the same way, the only difference being the document is expected to start with a ColdFusion
+comment block.</p>
+<pre><code class="language-md">&lt;!---
+layout: main
+view: page
+---&gt;
+</code></pre>
+<p>Just like you can write templates in liquid markdup on 11ty, <code>commandbox-ssg</code> will allow you to generate pages using
+CFML. This allows you more granular control over how the page is generated. I leverage this to generate sitemaps and rss
+feeds.
+<br></p>
+<h3>Special Directories</h3>
+<p>You can structure you site any way you like, but there are some directories <code>commandbox-ssg</code> will automatically use if
+they exist.</p>
+<ul>
+<li><strong>_includes/layouts</strong> - This is the main HTML scaffold for your application. Dynamic content should be displayed using <code>#renderedHTML#</code> variable</li>
+<li><strong>_includes</strong> - The <code>_includes</code> folder contains the views for your site. Views will reference <code>prc.content</code> to wrap the rendered content. (See below)</li>
+<li><strong>_data</strong> - JSON files in this folder will automatically be added to the <code>collections</code> scope. This has not been implemented yet.</li>
+<li><strong>_site</strong> - This is where the static content is output when the site is generated</li>
+</ul>
+<br>
+<h3>Variables Scopes and Helper Functions</h3>
+<p>Templates currently have two main scopes available to them as well as a helper function to generate slugs.
+<br></p>
+<p><strong>PRC Scope</strong>
+The <code>prc</code> scope contains everything known about a template. Here is an example of how it might look.</p>
+<pre><code class="language-js">{
+	&quot;view&quot;: &quot;&quot;,
+	&quot;content&quot;: &quot;&lt;cfdump var=\&quot;#serializeJSON(prc)#\&quot; /&gt;&quot;,
+	&quot;meta&quot;: {
+		&quot;url&quot;: &quot;https://example.com&quot;,
+		&quot;author&quot;: &quot;&quot;,
+		&quot;title&quot;: &quot;&quot;,
+		&quot;description&quot;: &quot;&quot;
+	},
+	&quot;permalink&quot;: &quot;/&quot;,
+	&quot;passthru&quot;: [],
+	&quot;outputDir&quot;: &quot;_site&quot;,
+	&quot;directory&quot;: &quot;/Users/rob/Development/small-blog&quot;,
+	&quot;fileExt&quot;: &quot;html&quot;,
+	&quot;headers&quot;: [],
+	&quot;rootDir&quot;: &quot;/Users/rob/Development/small-blog&quot;,
+	&quot;excludeFromCollections&quot;: false,
+	&quot;fileSlug&quot;: &quot;index&quot;,
+	&quot;layout&quot;: &quot;main&quot;,
+	&quot;image&quot;: &quot;&quot;,
+	&quot;published&quot;: true,
+	&quot;publishDate&quot;: &quot;&quot;,
+	&quot;type&quot;: &quot;page&quot;,
+	&quot;outFile&quot;: &quot;/Users/rob/Development/small-blog/_site/index.html&quot;,
+	&quot;inFile&quot;: &quot;/Users/rob/Development/small-blog/index.cfm&quot;,
+	&quot;title&quot;: &quot;&quot;,
+	&quot;build_start&quot;: 1703167890264,
+	&quot;description&quot;: &quot;&quot;,
+	&quot;ignore&quot;: []
+}
+</code></pre>
+<p>Any data from front matter will be in this scope as well. Any variable from the <code>prc</code> scope can be used in a layout,
+view, or template during the rendering process.</p>
+<p>Some properties you may want to override in the front matter might include:</p>
+<ul>
+<li><strong>type</strong> - Template type determines which <code>_includes</code> file is used when the template is rendered.</li>
+<li><strong>layout</strong> - Determines which layout file is used to render the template. Defaults to <code>main</code></li>
+<li><strong>view</strong> - Override template <code>type</code> rendering and use the specified view</li>
+<li><strong>published</strong> - If this value is <code>false</code> it will not be processed when the static site is built</li>
+<li><strong>publishDate</strong> - By default any template with type <code>post</code> will be sorted by publishDate in descending order</li>
+</ul>
+<p>The <code>prc.content</code> variable will either contain the CFML markup to generate the page or the HTML generated from the
+markdown in the template. If there is a <code>type</code> or <code>view</code> associated with the content it wil be used. Here is an example
+of how content is displayed in the <code>page</code> view.
+<br></p>
+<p><strong>Collections scope</strong></p>
+<p>While the <code>prc</code> scope is specific to a page, the <code>collections</code> scope keeps track of all known pages (unless the
+excludeFromCollections flag is set) and sorts them out in to several buckets. The <code>collections.all</code> array contains all
+discovered documents. There is also a <code>collections</code> array for each type of document, so if you had pages with types of
+<code>post</code> and <code>page</code> there would also be corresponding <code>collections.post</code> and <code>collections.page</code> arrays. It also builds out
+a list of all tags for your posts which can be found in <code>collections.tags</code>. Finally, it also keeps track of posts by tag
+in teh <code>collections.byTag.&lt;tag&gt;</code> arrays.</p>
+<br>
+<h3>Config File</h3>
+<p>Configuration is handled using <code>ssg-config.json</code></p>
+<pre><code class="language-js">{
+	&quot;meta&quot;: {
+		&quot;title&quot;: &quot;My Awesome site&quot;,
+		&quot;description&quot;: &quot;Something catchy here&quot;,
+		&quot;author&quot;: &quot;The Dude&quot;,
+		&quot;url&quot;: &quot;https://domain.com&quot;
+	},
+	&quot;outputDir&quot;: &quot;_site&quot;,
+	&quot;passthru&quot;: [
+		&quot;/favicon.ico&quot;,
+		&quot;/assets&quot;
+	],
+	&quot;ignore&quot;: [
+		&quot;/_includes&quot;
+	]
+}
+</code></pre>
+<br>
+<p>Settings:</p>
+<ul>
+<li><strong>meta.title</strong> - Populates the browser title bar</li>
+<li><strong>meta.description</strong> - Site description</li>
+<li><strong>meta.author</strong> - Primary author</li>
+<li><strong>meta.url</strong> - Used when generating links</li>
+<li><strong>outputDir</strong> - This value is currently hard-code to <code>_site</code></li>
+<li><strong>passthru</strong> - Array of files or directories that should be copied to the output directory</li>
+<li><strong>ignore</strong> - Array of directories that should be ignored</li>
+</ul>
+<p>If you do not explicitly exclude a directory it will be included by default. The <code>_includes</code> directory is excluded by default.</p>
+<h3>Creating your first layout</h3>
+<p>Creating your first layout is simple. This is the primary wrapper for your content and the main layout is expected to
+exist in <code>_includes\layouts\main.cfm</code>. Inside the layout you will need to specify where dynamic content should go by
+using <code>#renderedHtml#</code> variable.</p>
+<p>All layouts should be implemented in CFML.</p>
+<pre><code class="language-html">&lt;cfoutput&gt;
+&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+	&lt;meta charset=&quot;utf-8&quot;&gt;
+	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1, shrink-to-fit=no&quot;&gt;
+	&lt;title&gt;#prc.meta.title#&lt;/title&gt;
+	&lt;meta name=&quot;description&quot; content=&quot;#prc.meta.description#&quot;&gt;
+	&lt;meta name=&quot;author&quot; content=&quot;#prc.meta.author#&quot;&gt;
+	&lt;meta name=&quot;twitter:widgets:theme&quot; content=&quot;light&quot;&gt;
+	&lt;meta name=&quot;twitter:widgets:border-color&quot; content=&quot;##55acee&quot;&gt;
+	&lt;!--- &lt;base href=&quot;#event.getHTMLBaseURL()#&quot; /&gt; ---&gt;
+	&lt;cfloop array=&quot;#prc.headers#&quot; index=&quot;header&quot;&gt;
+		&lt;cfif header.keyExists(&quot;property&quot;)&gt;
+			&lt;meta property=&quot;#header.property#&quot; content=&quot;#header.content#&quot; /&gt;
+		&lt;cfelse&gt;
+			&lt;meta name=&quot;#header.name#&quot; content=&quot;#header.content#&quot; /&gt;
+		&lt;/cfif&gt;
+	&lt;/cfloop&gt;
+	&lt;link rel=&quot;stylesheet&quot; href=&quot;https://unpkg.com/bootstrap@4.6.0/dist/css/bootstrap.min.css&quot; crossorigin=&quot;anonymous&quot;&gt;
+	&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism-okaidia.min.css&quot; integrity=&quot;sha512-mIs9kKbaw6JZFfSuo+MovjU+Ntggfoj8RwAmJbVXQ5mkAX5LlgETQEweFPI18humSPHymTb5iikEOKWF7I8ncQ==&quot; crossorigin=&quot;anonymous&quot; referrerpolicy=&quot;no-referrer&quot; /&gt;
+	&lt;link rel=&quot;stylesheet&quot; href=&quot;/assets/css/site.css?v=#dateFormat(now(), &quot;yyyy-mm-dd&quot;)#T#timeFormat(now(), &quot;HH:mm:ss&quot;)#&quot;&gt;
+&lt;/head&gt;
+&lt;body style=&quot;padding-top: 70px;&quot;&gt;
+	&lt;nav class=&quot;navbar fixed-top navbar-expand-lg navbar-dark bg-dark&quot;&gt;
+		&lt;div class=&quot;container&quot;&gt;
+			&lt;a class=&quot;navbar-brand&quot; href=&quot;/&quot;&gt;commandbox-ssg&lt;/a&gt;
+			&lt;button class=&quot;navbar-toggler&quot; type=&quot;button&quot; data-toggle=&quot;collapse&quot; data-target=&quot;##navbarSupportedContent&quot; aria-controls=&quot;navbarSupportedContent&quot; aria-expanded=&quot;false&quot; aria-label=&quot;Toggle navigation&quot;&gt;
+				&lt;span class=&quot;navbar-toggler-icon&quot;&gt;&lt;/span&gt;
+			&lt;/button&gt;
+			&lt;div class=&quot;collapse navbar-collapse&quot; id=&quot;navbarSupportedContent&quot;&gt;
+				&lt;ul class=&quot;navbar-nav mr-auto&quot;&gt;
+					&lt;li class=&quot;nav-item active&quot;&gt;
+						&lt;a class=&quot;nav-link&quot; href=&quot;/&quot;&gt;Home&lt;/a&gt;
+					&lt;/li&gt;
+				&lt;/ul&gt;
+			&lt;/div&gt;
+		&lt;/div&gt;
+	&lt;/nav&gt;
+	&lt;!---Container And Views ---&gt;
+	&lt;div class=&quot;container-fluid&quot;&gt;
+		#renderedHtml#
+	&lt;/div&gt;
+	&lt;footer class=&quot;border-top py-3 mt-5&quot;&gt;
+		&lt;div class=&quot;container&quot;&gt;
+			&lt;small&gt;KISDigital.com&amp;copy; 2020 - #dateFormat(now(), &quot;yyyy&quot;)#&lt;/small&gt;
+		&lt;/div&gt;
+	&lt;/footer&gt;
+	&lt;!---js ---&gt;
+	&lt;script src=&quot;https://code.jquery.com/jquery-3.4.1.slim.min.js&quot; integrity=&quot;sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n&quot; crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;
+	&lt;script src=&quot;https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js&quot; integrity=&quot;sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo&quot; crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;
+	&lt;script src=&quot;https://unpkg.com/bootstrap@4.6.0/dist/js/bootstrap.min.js&quot; crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;//cdn.jsdelivr.net/gh/dkern/jquery.lazy@1.7.10/jquery.lazy.min.js&quot;&gt;&lt;/script&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;//cdn.jsdelivr.net/gh/dkern/jquery.lazy@1.7.10/jquery.lazy.plugins.min.js&quot;&gt;&lt;/script&gt;
+	&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/prism.min.js&quot; integrity=&quot;sha512-YBk7HhgDZvBxmtOfUdvX0z8IH2d10Hp3aEygaMNhtF8fSOvBZ16D/1bXZTJV6ndk/L/DlXxYStP8jrF77v2MIg==&quot; crossorigin=&quot;anonymous&quot; referrerpolicy=&quot;no-referrer&quot;&gt;&lt;/script&gt;
+	&lt;script&gt;
+		$(function($) {
+			$('.lazy img').lazy()
+		})
+	&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;/cfoutput&gt;
+</code></pre>
+<br>
+<h3>Creating your first View</h3>
+<p>Views work a little bit differently than layouts since the view wraps our template content.  The HTML for our template
+will come from the <code>prc.content</code> scope.</p>
+<p>All views should be implemented in CFML.</p>
+<pre><code class="language-html">&lt;cfoutput&gt;
+&lt;div class=&quot;row&quot;&gt;
+	&lt;div class=&quot;col-lg-8 col-md-12&quot;&gt;
+		&lt;div class=&quot;card rf-card-bordered text-white&quot;&gt;
+			&lt;div class=&quot;card-body&quot;&gt;
+				&lt;div class=&quot;card-text decorate-links&quot;&gt;
+					#prc.content#
+				&lt;/div&gt;
+			&lt;/div&gt;
+		&lt;/div&gt;
+	&lt;/div&gt;
+	&lt;div class=&quot;col-lg-4 d-none d-lg-block d-xl-block&quot;&gt;
+		&lt;cfinclude template=&quot;sidebar.cfm&quot; /&gt;
+	&lt;/div&gt;
+&lt;/div&gt;
+&lt;/cfoutput&gt;
+</code></pre>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-4 d-none d-lg-block d-xl-block">
+<div>
+	<div class="card rf-card-bordered text-white">
+		<div class="card-body">
+			<div class="card-title">
+				<span class="h6"><span style="color: var(--post-link-text)">KIS</span>Digital</span>
+			</div>
+			<div class="card-text">
+				<small>
+					ColdFusion, ColdBox, CommandBox and assorted musings.
+				</small>
+			</div>
+		</div>
+	</div>
+	<div class="card rf-card-bordered text-white mt-3">
+		<div class="card-body">
+			<div class="card-title">
+				<span class="h6">Tags</span>
+			</div>
+			<div class="card-text">
+					<a href="/tag/cfml"> <span class="h5"><span class="badge bg-info text-muted p-2">cfml</span></span></a>
+					<a href="/tag/commandbox"> <span class="h5"><span class="badge bg-info text-muted p-2">commandbox</span></span></a>
+					<a href="/tag/misc"> <span class="h5"><span class="badge bg-info text-muted p-2">misc</span></span></a>
+					<a href="/tag/sql"> <span class="h5"><span class="badge bg-info text-muted p-2">sql</span></span></a>
+			</div>
+		</div>
+	</div>
+	<div class="card rf-card-bordered text-white mt-3">
+		<div class="card-body">
+			<div class="card-title">
+				<span class="h6">Recent Posts</span>
+			</div>
+			<div class="card-text">
+					<a href="/posts/2023/commandbox-ssg-updates" class="post-link text-decoration-none">Commandbox-ssg updates</a><br />
+					<a href="/posts/2023/an-introduction-to-commandbox-ssg" class="post-link text-decoration-none">An introduction to commandbox-ssg</a><br />
+					<a href="/posts/2023/bringing-back-commandbox-ssg" class="post-link text-decoration-none">Bringing back commandbox-ssg</a><br />
+					<a href="/posts/2023/introducing-commandbox-apiman" class="post-link text-decoration-none">Introducing commandbox-apiman</a><br />
+					<a href="/posts/2022/generating-common-blog-files-with-jasper" class="post-link text-decoration-none">Generating common blog files with Jasper</a><br />
+			</div>
+		</div>
+	</div>
+	<div class="card rf-card-bordered text-white mt-3">
+		<div class="card-body">
+			<div class="card-title">
+				<span class="h6">Projects</span>
+			</div>
+			<div class="card-text">
+					<a href="/projects/commandbox-apiman" class="post-link text-decoration-none">commandbox-apiman</a><br />
+					<a href="/projects/commandbox-ssg" class="post-link text-decoration-none">commandbox-ssg</a><br />
+			</div>
+		</div>
+	</div>
+</div>
+	</div>
+</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="//cdn.jsdelivr.net/gh/dkern/jquery.lazy@1.7.10/jquery.lazy.min.js"></script>
+	<script type="text/javascript" src="//cdn.jsdelivr.net/gh/dkern/jquery.lazy@1.7.10/jquery.lazy.plugins.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/prism.min.js" integrity="sha512-YBk7HhgDZvBxmtOfUdvX0z8IH2d10Hp3aEygaMNhtF8fSOvBZ16D/1bXZTJV6ndk/L/DlXxYStP8jrF77v2MIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="/assets/js/global.js?v=1703257225189"></script>
+	<script>
+		$(function($) {
+			$('.lazy img').lazy()
+		})
+	</script>
+</body>
+</html>

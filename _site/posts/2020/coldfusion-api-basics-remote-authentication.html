@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>KISDigital - ColdFusion API Basics - Remote Authentication</title>
+	<meta name="description" content="ColdFusion, ColdBox, CommandBox and other assorted musings">
+	<meta name="author" content="Robert Zehnder">
+	<meta name="twitter:widgets:theme" content="light">
+	<meta name="twitter:widgets:border-color" content="#55acee">
+			<meta property="og:title" content="ColdFusion API Basics - Remote Authentication" />
+			<meta property="og:description" content="Outlining the major remote authentication paradigms" />
+			<meta property="og:image" content="https://static.kisdigital.com/images/coldfusion-api-basics-remote-authentication/00_cover.jpeg" />
+			<meta name="twitter:card" content="summary_large_image" />
+			<meta name="twitter:title" content="ColdFusion API Basics - Remote Authentication" />
+			<meta name="twitter:description" content="Outlining the major remote authentication paradigms" />
+			<meta name="twitter:image" content="https://static.kisdigital.com/images/coldfusion-api-basics-remote-authentication/00_cover.jpeg" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism-themes/1.9.0/prism-one-dark.min.css" integrity="sha512-c6S8OdtvoqZCbMfA1lWE0qd368pLdFvVHVILQzNizfowC+zV8rmVKdSlmL5SuidvATO0A7awDg53axd+s/9amw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href="/assets/css/site.css?v=1703257225189">
+</head>
+<body style="padding-top: 70px;">
+	<header>
+		<nav class="header">
+			<div class="container">
+				<div class="row">
+					<div class="col-2">
+						<a class="site-link" href="/"><span style="color: var(--post-link-text)">KIS</span>Digital</a>
+					</div>
+					<div class="col-10"></div>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<div class="container text-white">
+<div class="row">
+	<div class="col-lg-8 col-md-12">
+		<div class="card rf-card-bordered">
+			<div class="card-body">
+				<div style="background: url(https://static.kisdigital.com/images/coldfusion-api-basics-remote-authentication/00_cover.jpeg) no-repeat center center; background-size: cover; height: 350px;">
+					<div class="bg-dark w-75 opacity-75 p-2">
+						<p class="h2 text-white">ColdFusion API Basics - Remote Authentication</p>
+						<small class="d-block text-white py-1">Outlining the major remote authentication paradigms</small>
+							<span class="badge bg-light m-1 p-2 h5 text-dark">cfml</span>
+						<p class="text-white small text-uppercase">
+							July 20, 2020 /
+							Robert Zehnder
+						</p>
+					</div>
+				</div>
+				<div class="my-3">
+					<a href="https://www.facebook.com/sharer/sharer.php?u=https://kisdigital.com/posts/2020/coldfusion-api-basics-remote-authentication" class="text-decoration-none" target="_blank">
+						<i class="bi bi-facebook px-1 text-white fs-5"></i>
+					</a>
+					<a href="https://www.twitter.com/share?url=https://kisdigital.com/posts/2020/coldfusion-api-basics-remote-authentication" class="text-decoration-none" target="_blank">
+						<i class="bi bi-twitter px-1 text-white fs-5"></i>
+					</a>
+					<a href="https://www.linkedin.com/sharing/share-offsite/?url=https://kisdigital.com/posts/2020/coldfusion-api-basics-remote-authentication" class="text-decoration-none" target="_blank">
+						<i class="bi bi-linkedin px-1 text-white fs-5"></i>
+					</a>
+				</div>
+				<div class="my-3 text-white post decorate-links">
+					<p>APIs are so common place and pervasive in our technology today that we barely even give them a second thought. If you are writing an e-commerce app you might have an API call to verify a user entered a valid shipping address, you might use an API call to put items in a shopping cart, or process a transaction. At the simplest level ColdFusion makes a cfhttp request out to a remote resource.</p>
+<p>I have worked with many APIs over the years and the first milestone for any API project is that first successful request. The one where the moon and stars align just so, the breeze is blowing in a particular way, and the gods of the interwebs grace us with a successful response. That may seem a little theatric, but sometimes getting the authentication right is the hardest part of the project; Everything else will just fall in line the groundwork is done right.</p>
+<h4>Authentication types</h4>
+<h5>No Authentication</h5>
+<p>If you are using a public API it is possible there will be no authentication required. There are a few sites like JSONPlaceholder that provide free REST API you can use when you need fake data.</p>
+<h5>Basic Authentication</h5>
+<p>Basic authentication might be the first step in securing an API call. This would allow you to pass a username and password combination encoded as a hexadecimal string and passed as an authorization header.</p>
+<pre><code class="language-javascript">cfhttp(url = &quot;https://www.site.com/my/api&quot;){
+ cfhttpparam(type = &quot;header&quot;, name = &quot;Authorization&quot;, value=&quot;Basic &quot; &amp; toBase64(&quot;username:password&quot;); 
+}
+</code></pre>
+<p>Basic authentication is one of the simplest techniques of enforcing access controls to web pages and is implemented in all major web servers. Typically you would only want to use basic auth in conjunction with HTTPS since there is no confidentiality protection for your credentials, they are just base64 encoded but not encrypted or hashed in any way.</p>
+<h5>API Key Authentication</h5>
+<p>Some APIs will authenticate a request by expecting a key in a specific header or URL parameter. Like basic authentication, this scheme is best used over HTTPS because credentials are not encrypted or hashed.</p>
+<pre><code class="language-javascript">cfhttp(url = &quot;https://www.site.com/my/api&quot;){
+ cfhttpparam(type = &quot;header&quot;, name = &quot;api-key&quot;, value=&quot;AwesomeAPI_mykey&quot;); 
+}
+</code></pre>
+<h5>Signature Based Authentication</h5>
+<p>Signature based authentication is popular with online sellers because you can ensure the request was not modified in flight. Here is an example generating the authorization header for a request by concatenating the endpoint URL with the raw post body and generating the HMAC-SHA256 signature.</p>
+<pre><code class="language-javascript"> var body = {
+ 'partner_id': instance.props.partner_id,
+ 'shopid': instance.props.shopid,
+ 'order_status': criteria.keyExists(&quot;orderStatus&quot;) ? criteria.orderStatus : &quot;ALL&quot;,
+ 'timestamp': int(dateDiff(&quot;s&quot;, dateConvert(&quot;utc2Local&quot;, &quot;January 1 1970 00:00&quot;), now()))
+ };
+ cfhttp(url = instance.props.apiBase &amp; &quot;orders/get&quot;, method = &quot;post&quot;){
+ cfhttpparam(type = &quot;header&quot;, name = &quot;Content-Type&quot;, value = &quot;application/json&quot;);
+ cfhttpparam(type = &quot;header&quot;, name = &quot;Authorization&quot;, value = lcase(hmac(instance.props.apiBase &amp; &quot;orders/get|&quot; &amp; serializeJSON(body), instance.props.apiAuth, &quot;HMACSHA256&quot;, &quot;UTF-8&quot;)));
+ cfhttpparam(type = &quot;body&quot;, value = serializeJSON(body));
+ };
+</code></pre>
+<p>It can sometimes present some challenges since some ColdFusion crypto functions do not not always work the way you think they should. ColdFusion is a loosely-typed language, if the API is expecting a numeric value you should ensure that CF is passing the value as a number as opposed to a string.</p>
+<h5>OAuth Based Authentication</h5>
+<p>Authenticating with OAuth requires calling an endpoint to generate an access token that has a set time to live. Implementation varies by vendor, once your access token expires you might be required to generate a new access token using a refresh token or just generate a new access token.</p>
+<pre><code class="language-javascript">private string function getBearerToken (){
+ var authData = {};
+ var authCache = cacheGet(&quot;authKey&quot;);
+ if(authCache.svrStatus == 0){ // Token can be pulled from cache
+ authData.append(authCache.data);
+ }
+ else{ // Generate a new token
+ cfhttp(url = instance.props.oauthURL, method = &quot;post&quot;){
+ cfhttpparam(type = &quot;header&quot;, name = &quot;Content-Type&quot;, value = &quot;application/json&quot;);
+ cfhttpparam(type = &quot;body&quot;, value = serializeJSON(instance.props.credentials));
+ }
+ if(isJSON(cfhttp.fileContent)){ // returned valid json
+ authData.append(deserializeJSON(cfhttp.fileContent));
+ // set the cache key and do cool stuff
+ }
+ }
+ return authData.keyExists(&quot;data&quot;) &amp;&amp; authData.data.keyExists(&quot;token&quot;) ? authData.data.token : &quot;&quot;; 
+}
+public struct function listOrders () {
+ var res = {};
+ var postBody = {
+ &quot;pageNo&quot;: criteria.keyExists(&quot;pageNo&quot;) ? criteria.pageNo : 1,
+ &quot;pageSize&quot;: criteria.keyExists(&quot;pageSize&quot;) ? criteria.pageSize : 100
+ };
+ cfhttp(url = instance.props.apiBase &amp; 'order/platform/list', method = &quot;post&quot;){
+ cfhttpparam(type = &quot;header&quot;, name = &quot;Authorization&quot;, value = &quot;Bearer &quot; &amp; getBearerToken());
+ cfhttpparam(type = &quot;header&quot;, name = &quot;Content-Type&quot;, value = &quot;application/json&quot;);
+ cfhttpparam(type = &quot;body&quot;, value = deserializeJSON(postBody));
+ }
+ if(isJSON(cfhttp.fileContent)){
+ // do stuff with the response 
+ }
+ return res;
+}
+</code></pre>
+<p>Each request requires a bearer token to be passed in the authorization header so I will generally create a private method that will return the current token. The first step is to check cache to see if the current token exists, if so, just return the token value. If the token does not exist call the OAuth authorization endpoint, place the token in cache and match the token time-to-live, and finally return the token.</p>
+<p>Methods calling the remote API will use getBearerToken() to generate the bearer token each request. If the token expired (no longer exists in cache) it will just seamlessly generate a new token and set a new cache key.</p>
+<h4>Wrapping Up</h4>
+<p>These are the authentication schemes I have found most often when trying to get an API integration up and running. Even though every implementation is different, it is always nice to see how others have handled it. I hope this gets you pointed in the right direction.</p>
+				</div>
+<div id="disqus_thread"></div>
+<script>
+	/**
+	 *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+	 *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+	var disqus_config = function () {
+		this.page.url = "https://kisdigital.com/posts/2020/coldfusion-api-basics-remote-authentication";
+		this.page.identifier = "/posts/2020/coldfusion-api-basics-remote-authentication"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+	};
+	(function() { // DON'T EDIT BELOW THIS LINE
+		var d = document, s = d.createElement('script');
+		s.src = 'https://kisdigital.disqus.com/embed.js';
+		s.setAttribute('data-timestamp', +new Date());
+		(d.head || d.body).appendChild(s);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-4 d-none d-lg-block d-xl-block">
+<div>
+	<div class="card rf-card-bordered text-white">
+		<div class="card-body">
+			<div class="card-title">
+				<span class="h6"><span style="color: var(--post-link-text)">KIS</span>Digital</span>
+			</div>
+			<div class="card-text">
+				<small>
+					ColdFusion, ColdBox, CommandBox and assorted musings.
+				</small>
+			</div>
+		</div>
+	</div>
+	<div class="card rf-card-bordered text-white mt-3">
+		<div class="card-body">
+			<div class="card-title">
+				<span class="h6">Tags</span>
+			</div>
+			<div class="card-text">
+					<a href="/tag/cfml"> <span class="h5"><span class="badge bg-info text-muted p-2">cfml</span></span></a>
+					<a href="/tag/commandbox"> <span class="h5"><span class="badge bg-info text-muted p-2">commandbox</span></span></a>
+					<a href="/tag/misc"> <span class="h5"><span class="badge bg-info text-muted p-2">misc</span></span></a>
+					<a href="/tag/sql"> <span class="h5"><span class="badge bg-info text-muted p-2">sql</span></span></a>
+			</div>
+		</div>
+	</div>
+	<div class="card rf-card-bordered text-white mt-3">
+		<div class="card-body">
+			<div class="card-title">
+				<span class="h6">Recent Posts</span>
+			</div>
+			<div class="card-text">
+					<a href="/posts/2023/commandbox-ssg-updates" class="post-link text-decoration-none">Commandbox-ssg updates</a><br />
+					<a href="/posts/2023/an-introduction-to-commandbox-ssg" class="post-link text-decoration-none">An introduction to commandbox-ssg</a><br />
+					<a href="/posts/2023/bringing-back-commandbox-ssg" class="post-link text-decoration-none">Bringing back commandbox-ssg</a><br />
+					<a href="/posts/2023/introducing-commandbox-apiman" class="post-link text-decoration-none">Introducing commandbox-apiman</a><br />
+					<a href="/posts/2022/generating-common-blog-files-with-jasper" class="post-link text-decoration-none">Generating common blog files with Jasper</a><br />
+			</div>
+		</div>
+	</div>
+	<div class="card rf-card-bordered text-white mt-3">
+		<div class="card-body">
+			<div class="card-title">
+				<span class="h6">Projects</span>
+			</div>
+			<div class="card-text">
+					<a href="/projects/commandbox-apiman" class="post-link text-decoration-none">commandbox-apiman</a><br />
+					<a href="/projects/commandbox-ssg" class="post-link text-decoration-none">commandbox-ssg</a><br />
+			</div>
+		</div>
+	</div>
+</div>
+	</div>
+</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="//cdn.jsdelivr.net/gh/dkern/jquery.lazy@1.7.10/jquery.lazy.min.js"></script>
+	<script type="text/javascript" src="//cdn.jsdelivr.net/gh/dkern/jquery.lazy@1.7.10/jquery.lazy.plugins.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/prism.min.js" integrity="sha512-YBk7HhgDZvBxmtOfUdvX0z8IH2d10Hp3aEygaMNhtF8fSOvBZ16D/1bXZTJV6ndk/L/DlXxYStP8jrF77v2MIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="/assets/js/global.js?v=1703257225189"></script>
+	<script>
+		$(function($) {
+			$('.lazy img').lazy()
+		})
+	</script>
+</body>
+</html>

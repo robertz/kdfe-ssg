@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+ <loc>https://kisdigital.com/posts/2020/coldfusion-api-basics-remote-authentication</loc>
+ <lastmod>2023-12-22</lastmod>
+</url>
+<url>
+ <loc>https://kisdigital.com/posts/2020/quickly-transform-xml-to-json-with-org-json</loc>
+ <lastmod>2023-12-22</lastmod>
+</url>
+<url>
+ <loc>https://kisdigital.com/posts/2020/using-coldfusion-to-read-opengraph-and-twitter-metadata</loc>
+ <lastmod>2023-12-22</lastmod>
+</url>
+<url>
+ <loc>https://kisdigital.com/posts/2021/array-slice-and-timing</loc>
+ <lastmod>2023-12-22</lastmod>
+</url>
+<url>
+ <loc>https://kisdigital.com/posts/2021/chunking-an-array-with-coldfusion</loc>
+ <lastmod>2023-12-22</lastmod>
+</url>
+<url>
+ <loc>https://kisdigital.com/posts/2021/chunking-an-array-with-coldfusion-revisited</loc>
+ <lastmod>2023-12-22</lastmod>
+</url>
+<url>
+ <loc>https://kisdigital.com/posts/2021/connect-to-sql-server-from-dbeaver</loc>
+ <lastmod>2023-12-22</lastmod>
+</url>
+<url>
+ <loc>https://kisdigital.com/posts/2021/syncing-files-with-rsync</loc>
+ <lastmod>2023-12-22</lastmod>
+</url>
+<url>
+ <loc>https://kisdigital.com/posts/2022/building-a-cf-sitemap-generator</loc>
+ <lastmod>2023-12-22</lastmod>
+</url>
+<url>
+ <loc>https://kisdigital.com/posts/2022/commandbox-jasper-part-deux</loc>
+ <lastmod>2023-12-22</lastmod>
+</url>
+<url>
+ <loc>https://kisdigital.com/posts/2022/commandbox-jasper-ssg-generator</loc>
+ <lastmod>2023-12-22</lastmod>
+</url>
+<url>
+ <loc>https://kisdigital.com/posts/2022/commandbox-jasper-the-third-part</loc>
+ <lastmod>2023-12-22</lastmod>
+</url>
+<url>
+ <loc>https://kisdigital.com/posts/2022/generating-common-blog-files-with-jasper</loc>
+ <lastmod>2023-12-22</lastmod>
+</url>
+<url>
+ <loc>https://kisdigital.com/posts/2022/how-i-use-commandbox-with-my-blog</loc>
+ <lastmod>2023-12-22</lastmod>
+</url>
+<url>
+ <loc>https://kisdigital.com/posts/2023/an-introduction-to-commandbox-ssg</loc>
+ <lastmod>2023-12-22</lastmod>
+</url>
+<url>
+ <loc>https://kisdigital.com/posts/2023/bringing-back-commandbox-ssg</loc>
+ <lastmod>2023-12-22</lastmod>
+</url>
+<url>
+ <loc>https://kisdigital.com/posts/2023/commandbox-ssg-updates</loc>
+ <lastmod>2023-12-22</lastmod>
+</url>
+<url>
+ <loc>https://kisdigital.com/posts/2023/introducing-commandbox-apiman</loc>
+ <lastmod>2023-12-22</lastmod>
+</url>
+</urlset>

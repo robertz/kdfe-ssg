@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>KISDigital - Generating common blog files with Jasper</title>
+	<meta name="description" content="ColdFusion, ColdBox, CommandBox and other assorted musings">
+	<meta name="author" content="Robert Zehnder">
+	<meta name="twitter:widgets:theme" content="light">
+	<meta name="twitter:widgets:border-color" content="#55acee">
+			<meta property="og:title" content="Generating common blog files with Jasper" />
+			<meta property="og:description" content="Generate sitemap.xml and feed.rss with Jasper 0.18.0" />
+			<meta property="og:image" content="https://static.kisdigital.com/images/2022/07/bonsai-00.jpg" />
+			<meta name="twitter:card" content="summary_large_image" />
+			<meta name="twitter:title" content="Generating common blog files with Jasper" />
+			<meta name="twitter:description" content="Generate sitemap.xml and feed.rss with Jasper 0.18.0" />
+			<meta name="twitter:image" content="https://static.kisdigital.com/images/2022/07/bonsai-00.jpg" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism-themes/1.9.0/prism-one-dark.min.css" integrity="sha512-c6S8OdtvoqZCbMfA1lWE0qd368pLdFvVHVILQzNizfowC+zV8rmVKdSlmL5SuidvATO0A7awDg53axd+s/9amw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href="/assets/css/site.css?v=1703257225189">
+</head>
+<body style="padding-top: 70px;">
+	<header>
+		<nav class="header">
+			<div class="container">
+				<div class="row">
+					<div class="col-2">
+						<a class="site-link" href="/"><span style="color: var(--post-link-text)">KIS</span>Digital</a>
+					</div>
+					<div class="col-10"></div>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<div class="container text-white">
+<div class="row">
+	<div class="col-lg-8 col-md-12">
+		<div class="card rf-card-bordered">
+			<div class="card-body">
+				<div style="background: url(https://static.kisdigital.com/images/2022/07/bonsai-00.jpg) no-repeat center center; background-size: cover; height: 350px;">
+					<div class="bg-dark w-75 opacity-75 p-2">
+						<p class="h2 text-white">Generating common blog files with Jasper</p>
+						<small class="d-block text-white py-1">Generate sitemap.xml and feed.rss with Jasper 0.18.0</small>
+							<span class="badge bg-light m-1 p-2 h5 text-dark">cfml</span>
+							<span class="badge bg-light m-1 p-2 h5 text-dark">commandbox</span>
+						<p class="text-white small text-uppercase">
+							August 1, 2022 /
+							Robert Zehnder
+						</p>
+					</div>
+				</div>
+				<div class="my-3">
+					<a href="https://www.facebook.com/sharer/sharer.php?u=https://kisdigital.com/posts/2022/generating-common-blog-files-with-jasper" class="text-decoration-none" target="_blank">
+						<i class="bi bi-facebook px-1 text-white fs-5"></i>
+					</a>
+					<a href="https://www.twitter.com/share?url=https://kisdigital.com/posts/2022/generating-common-blog-files-with-jasper" class="text-decoration-none" target="_blank">
+						<i class="bi bi-twitter px-1 text-white fs-5"></i>
+					</a>
+					<a href="https://www.linkedin.com/sharing/share-offsite/?url=https://kisdigital.com/posts/2022/generating-common-blog-files-with-jasper" class="text-decoration-none" target="_blank">
+						<i class="bi bi-linkedin px-1 text-white fs-5"></i>
+					</a>
+				</div>
+				<div class="my-3 text-white post decorate-links">
+					<p>My schedule has been full lately leaving little time for fun side projects, but one thing I really wanted to get working in Jasper was the ability to generate templates from CFML. Eleventy allows you to set the output file using the permalink attribute in the front matter and generate a template dynamically using liquid script. I would like Jasper to function in much the same way, but using CFML to generate the page.</p>
+<h4>Generating sitemap.xml</h4>
+<p>As a quick example, here is a template that will generate <code>sitemap.xml</code> for a Jasper blog.</p>
+<pre><code class="language-html">&lt;!---
+layout: none
+permalink: /sitemap.xml
+excludeFromCollections: true
+---&gt;
+&lt;cfscript&gt;
+ function getPages(collections){
+  var ret = collections.all.filter((item) =&gt; {
+   return item.excludeFromCollections == false &amp;&amp; (item.type == &quot;page&quot; || item.type == &quot;post&quot;);
+  });
+  ret.sort( ( e1, e2 ) =&gt; {
+   return compare( e1.permalink, e2.permalink );
+  } );
+  return ret;
+ }
+ lastMod = dateFormat(now(), &quot;yyyy-mm-dd&quot;);
+savecontent variable=&quot;xml&quot; {
+writeOutput('&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;#chr(10)#');
+writeoutput('&lt;urlset xmlns=&quot;http://www.sitemaps.org/schemas/sitemap/0.9&quot;&gt;#chr(10)#');
+for(var p in getPages(collections)){
+writeoutput('
+&lt;url&gt;
+ &lt;loc&gt;#prc.meta.url##p.permalink#&lt;/loc&gt;
+ &lt;lastmod&gt;#lastMod#&lt;/lastmod&gt;
+&lt;/url&gt;
+');
+}
+writeoutput('&lt;/urlset&gt;#chr(10)#');
+}
+&lt;/cfscript&gt;
+&lt;cfoutput&gt;#xml#&lt;/cfoutput&gt;
+</code></pre>
+<p>The layout in the front matter is set to <code>none</code> so no layout will be rendered. The template content will be to the path specified by the permalink attribute.</p>
+<p>The <a href="https://github.com/robertz/jasper-cli">example blog</a> also has an example <code>feed.rss</code> file, but it still a work in progress.</p>
+<h4>Jasper and scopes</h4>
+<p>Jasper 0.18.0 has two major sources of data used to render templates.</p>
+<p>First, the <code>prc</code> scope contains all front matter attributes and metadata required to render the page as well as data about the page.</p>
+<pre><code class="language-js">var prc = {
+ &quot;rootDir&quot;   : rootDir,
+ &quot;directory&quot; : template.directory,
+ &quot;fileSlug&quot;  : template.name.listFirst( &quot;.&quot; ),
+ &quot;inFile&quot;    : template.directory &amp; &quot;/&quot; &amp; template.name,
+ &quot;outFile&quot;   : &quot;&quot;,
+ &quot;headers&quot;   : [],
+ &quot;meta&quot;      : {
+  &quot;title&quot;       : &quot;&quot;,
+  &quot;description&quot; : &quot;&quot;,
+  &quot;author&quot;      : &quot;&quot;,
+  &quot;url&quot;         : &quot;&quot;
+ },
+ // core properties
+ &quot;title&quot;                  : &quot;&quot;,
+ &quot;description&quot;            : &quot;&quot;,
+ &quot;image&quot;                  : &quot;&quot;,
+ &quot;published&quot;              : false,
+ &quot;publishDate&quot;            : &quot;&quot;,
+ // other
+ &quot;content&quot;                : &quot;&quot;,
+ &quot;type&quot;                   : &quot;page&quot;,
+ &quot;layout&quot;                 : &quot;main&quot;,
+ &quot;permalink&quot;              : true,
+ &quot;fileExt&quot;                : &quot;html&quot;,
+ &quot;excludeFromCollections&quot; : false
+};
+</code></pre>
+<p>Next is the <code>collections</code> scope which details all the known templates. Inside <code>collections</code>, <code>collections.all</code> is an array of all templates detected by jasper, templates are also broken out by <code>type</code> (&quot;page&quot; or &quot;post&quot;) as well as templates broken out by <code>tag</code> (&quot;coldfusion&quot;, &quot;coldbox&quot;, &quot;lucee&quot;, etc.). The <code>tags</code> array in <code>collections</code> lists all tags, <code>collections.byTag</code> contains all posts with a given tag.</p>
+<p>I would encourage you to take a look at <code>debug.cfm</code> in the example blog. This can be installed using the jasper commandbox module <code>box install commandbox-jasper</code>, then <code>box jasper build</code>, finally <code>box server start</code> to run the development server.</p>
+<h4>Jasper and social meta data</h4>
+<p>Jasper 0.18.0 will now add opengraph and twitter metadata when the template <code>type</code> is &quot;post&quot;. When the template is rendered the appropriate headers will be set for you. Metadata for other page types will be added in a later release.</p>
+<h4>What is next?</h4>
+<p>I still have quite a bit of code to clean up, but the next major feature I would like to work on is pagination. Look out for more updates!</p>
+<p>Photo by <a href="https://unsplash.com/@tegethoff?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Mark Tegethoff</a> on <a href="https://unsplash.com/s/photos/bonsai?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a></p>
+				</div>
+<div id="disqus_thread"></div>
+<script>
+	/**
+	 *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+	 *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+	var disqus_config = function () {
+		this.page.url = "https://kisdigital.com/posts/2022/generating-common-blog-files-with-jasper";
+		this.page.identifier = "/posts/2022/generating-common-blog-files-with-jasper"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+	};
+	(function() { // DON'T EDIT BELOW THIS LINE
+		var d = document, s = d.createElement('script');
+		s.src = 'https://kisdigital.disqus.com/embed.js';
+		s.setAttribute('data-timestamp', +new Date());
+		(d.head || d.body).appendChild(s);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-4 d-none d-lg-block d-xl-block">
+<div>
+	<div class="card rf-card-bordered text-white">
+		<div class="card-body">
+			<div class="card-title">
+				<span class="h6"><span style="color: var(--post-link-text)">KIS</span>Digital</span>
+			</div>
+			<div class="card-text">
+				<small>
+					ColdFusion, ColdBox, CommandBox and assorted musings.
+				</small>
+			</div>
+		</div>
+	</div>
+	<div class="card rf-card-bordered text-white mt-3">
+		<div class="card-body">
+			<div class="card-title">
+				<span class="h6">Tags</span>
+			</div>
+			<div class="card-text">
+					<a href="/tag/cfml"> <span class="h5"><span class="badge bg-info text-muted p-2">cfml</span></span></a>
+					<a href="/tag/commandbox"> <span class="h5"><span class="badge bg-info text-muted p-2">commandbox</span></span></a>
+					<a href="/tag/misc"> <span class="h5"><span class="badge bg-info text-muted p-2">misc</span></span></a>
+					<a href="/tag/sql"> <span class="h5"><span class="badge bg-info text-muted p-2">sql</span></span></a>
+			</div>
+		</div>
+	</div>
+	<div class="card rf-card-bordered text-white mt-3">
+		<div class="card-body">
+			<div class="card-title">
+				<span class="h6">Recent Posts</span>
+			</div>
+			<div class="card-text">
+					<a href="/posts/2023/commandbox-ssg-updates" class="post-link text-decoration-none">Commandbox-ssg updates</a><br />
+					<a href="/posts/2023/an-introduction-to-commandbox-ssg" class="post-link text-decoration-none">An introduction to commandbox-ssg</a><br />
+					<a href="/posts/2023/bringing-back-commandbox-ssg" class="post-link text-decoration-none">Bringing back commandbox-ssg</a><br />
+					<a href="/posts/2023/introducing-commandbox-apiman" class="post-link text-decoration-none">Introducing commandbox-apiman</a><br />
+					<a href="/posts/2022/generating-common-blog-files-with-jasper" class="post-link text-decoration-none">Generating common blog files with Jasper</a><br />
+			</div>
+		</div>
+	</div>
+	<div class="card rf-card-bordered text-white mt-3">
+		<div class="card-body">
+			<div class="card-title">
+				<span class="h6">Projects</span>
+			</div>
+			<div class="card-text">
+					<a href="/projects/commandbox-apiman" class="post-link text-decoration-none">commandbox-apiman</a><br />
+					<a href="/projects/commandbox-ssg" class="post-link text-decoration-none">commandbox-ssg</a><br />
+			</div>
+		</div>
+	</div>
+</div>
+	</div>
+</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="//cdn.jsdelivr.net/gh/dkern/jquery.lazy@1.7.10/jquery.lazy.min.js"></script>
+	<script type="text/javascript" src="//cdn.jsdelivr.net/gh/dkern/jquery.lazy@1.7.10/jquery.lazy.plugins.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/prism.min.js" integrity="sha512-YBk7HhgDZvBxmtOfUdvX0z8IH2d10Hp3aEygaMNhtF8fSOvBZ16D/1bXZTJV6ndk/L/DlXxYStP8jrF77v2MIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="/assets/js/global.js?v=1703257225189"></script>
+	<script>
+		$(function($) {
+			$('.lazy img').lazy()
+		})
+	</script>
+</body>
+</html>
