@@ -3,7 +3,7 @@ layout: main
 type: post
 title: Rob's red beans and rice recipe
 author: Robert Zehnder
-slug: merry-christmas
+slug: robs-red-beans-and-rice
 publishDate: 2023-12-26 18:00:00
 published: true
 image: https://static.kisdigital.com/ssg/2023/chef-making-red-beans.jpg
