@@ -5,7 +5,7 @@ title: Merry Christmas
 author: Robert Zehnder
 slug: merry-christmas
 publishDate: 2023-12-24 18:00:00
-published: false
+published: true
 image: https://static.kisdigital.com/ssg/2023/santa-and-reindeer.jpeg
 description: Wishing you and your family a Merry Christmas and a Happy New Year!
 tags:

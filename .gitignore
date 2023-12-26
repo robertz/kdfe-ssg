@@ -1,4 +1,4 @@
 # Local Netlify folder
 .netlify
 /node_modules
-_site/assets/.DS_Store
+_site/

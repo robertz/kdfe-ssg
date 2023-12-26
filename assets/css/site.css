@@ -51,6 +51,12 @@ a.site-link {
 	border-radius:1em;
 }
 
+blockquote {
+	border-left: 4px solid #4fbcff;
+	padding: 1em 1em 0.1em 2em;
+	background: #272b33;
+}
+
 :root {
 	--main-padding: 5px 8px 10px;
 	--main-background-color: #1a1a1b;

@@ -3,7 +3,7 @@
 	<div class="col-lg-8 col-md-12">
 		<div class="card rf-card-bordered text-white">
 			<div class="card-body">
-				<div class="card-text">
+				<div class="card-text decorate-links">
 					#prc.content#
 				</div>
 			</div>
