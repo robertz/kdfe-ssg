@@ -1,6 +1,5 @@
 ---
 type: project
-view: page
 title: commandbox-apiman
 ---
 ### commandbox-apiman

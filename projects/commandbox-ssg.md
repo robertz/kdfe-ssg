@@ -1,6 +1,5 @@
 ---
 type: project
-view: page
 title: commandbox-ssg
 ---
 ### commandbox-ssg
