@@ -1,6 +1,7 @@
 ---
 type: project
 title: commandbox-ssg
+description: commandbox-ssg user manual
 ---
 ### commandbox-ssg
 SSG is a static site generator implemented in CommandBox.

@@ -1,6 +1,7 @@
 ---
 type: project
 title: commandbox-apiman
+description: commandbox-apiman user manual
 ---
 ### commandbox-apiman
 
