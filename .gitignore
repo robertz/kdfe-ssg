@@ -2,3 +2,5 @@
 .netlify
 /node_modules
 _site/
+.idea
+.env
