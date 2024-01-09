@@ -1,4 +1,6 @@
 <!---
+site:
+  url: https://kisdigital.com
 layout: none
 permalink: /sitemap.xml
 excludeFromCollections: true
@@ -20,7 +22,7 @@ excludeFromCollections: true
 	for(var p in getPages(collections)){
 	writeoutput('
 <url>
- <loc>#prc.meta.url##p.permalink#</loc>
+ <loc>#prc.site.url##p.permalink#</loc>
  <lastmod>#lastMod#</lastmod>
 </url>
 ');

@@ -80,7 +80,7 @@ component extends="commandbox.system.BaseCommand" {
    "html" : "",
    "tagCloud" : JasperService.getTags( posts )
   };
-  prc.meta.append( conf.meta );
+  prc.site.append( conf.meta );
   // get the home page
   savecontent variable="html" {
    include fileSystemUtil.resolvePath( "src/index.cfm" );
@@ -100,12 +100,12 @@ component extends="commandbox.system.BaseCommand" {
     "html" : "",
     "tagCloud" : tags
    };
-   prc.meta.append( conf.meta );
+   prc.site.append( conf.meta );
    prc.post.append(
     JasperService.getPostData( fname = fileSystemUtil.resolvePath( "src/posts/" & file.name ) )
    );
 
-   prc.meta.title &= " - " & prc.post.title;
+   prc.site.title &= " - " & prc.post.title;
 
    savecontent variable="html" {
     include fileSystemUtil.resolvePath( "src/post.cfm" );
@@ -127,13 +127,13 @@ component extends="commandbox.system.BaseCommand" {
     "html" : "",
     "tagCloud" : tags
    };
-   prc.meta.append( conf.meta );
+   prc.site.append( conf.meta );
 
    prc.posts = posts.filter( ( post ) => {
     return post.tags.findNoCase( prc.tag );
    } );
 
-   prc.meta.title &= " - " & lCase( prc.tag );
+   prc.site.title &= " - " & lCase( prc.tag );
 
    savecontent variable="html" {
     include fileSystemUtil.resolvePath( "src/tags.cfm" );

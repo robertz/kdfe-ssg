@@ -172,10 +172,10 @@ Configuration is handled using `ssg-config.json`
 <br>
 
 Settings:
-* **meta.title** - Populates the browser title bar
-* **meta.description** - Site description
-* **meta.author** - Primary author
-* **meta.url** - Used when generating links
+* **site.title** - Populates the browser title bar
+* **site.description** - Site description
+* **site.author** - Primary author
+* **site.url** - Used when generating links
 * **outputDir** - This value is currently hard-code to `_site`
 * **passthru** - Array of files or directories that should be copied to the output directory
 * **ignore** - Array of directories that should be ignored
@@ -196,9 +196,9 @@ All layouts should be implemented in CFML.
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<title>#prc.meta.title#</title>
-	<meta name="description" content="#prc.meta.description#">
-	<meta name="author" content="#prc.meta.author#">
+	<title>#prc.site.title#</title>
+	<meta name="description" content="#prc.site.description#">
+	<meta name="author" content="#prc.site.author#">
 	<meta name="twitter:widgets:theme" content="light">
 	<meta name="twitter:widgets:border-color" content="##55acee">
 	<!--- <base href="#event.getHTMLBaseURL()#" /> --->

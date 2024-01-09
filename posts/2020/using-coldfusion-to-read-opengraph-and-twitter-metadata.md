@@ -69,10 +69,10 @@ component extends="coldbox.system.EventHandler" {
  if (prc.url.len()) {
  var meta = SpiderService.spider(linkUrl = prc.url);
  var tmp = {
- 'title': meta.keyExists("twitter:title") ? meta['twitter:title'] : meta['og:title'],
- 'description': meta.keyExists("twitter:description") ? meta['twitter:description'] : meta['og:description'],
- 'image': meta.keyExists("twitter:img:src") ? meta['twitter:img:src'] : meta['og:image'],
- 'url': meta.keyExists("twitter:url") ? meta['twitter:url'] : meta['og:url']
+ 'title': site.keyExists("twitter:title") ? meta['twitter:title'] : meta['og:title'],
+ 'description': site.keyExists("twitter:description") ? meta['twitter:description'] : meta['og:description'],
+ 'image': site.keyExists("twitter:img:src") ? meta['twitter:img:src'] : meta['og:image'],
+ 'url': site.keyExists("twitter:url") ? meta['twitter:url'] : meta['og:url']
  };
  var exists = application.feed.filter(function(i){
  return i.url == tmp.url;
@@ -86,13 +86,13 @@ component extends="coldbox.system.EventHandler" {
 }
 ```
 
-![Meta](https://static.kisdigital.com/images/opengraph/01_meta.png)
+![Meta](https://static.kisdigital.com/images/opengraph/01_site.png)
 
 The spider handler is really simple; it makes a call to the spider service and will dump any meta data it finds for the url, if any.
 
 ![Feed](https://static.kisdigital.com/images/opengraph/02_feed.png)
 
-The feed handler builds off the spider handler. The results from the spider service are saved in the meta structure. Next a temporary structure stores the four main values needed for the tiled screen: title, description, image, and url. This code prefers to use the twitter meta if it exists, if not, fall back to the opengraph meta. Finally check to see if the item already exists in the application's feed array to prevent duplicate items.
+The feed handler builds off the spider handler. The results from the spider service are saved in the meta structure. Next a temporary structure stores the four main values needed for the tiled screen: title, description, image, and url. This code prefers to use the twitter meta if it exists, if not, fall back to the opengraph site. Finally check to see if the item already exists in the application's feed array to prevent duplicate items.
 
 Originally I was going to add this feature to a website I was working on, but that has fallen by the wayside. Still, I thought someone might find it interesting. If you would like to follow along at home the link to the repo is below, just follow the instructions in the readme.
 

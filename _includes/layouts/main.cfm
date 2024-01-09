@@ -1,22 +1,39 @@
+<!---
+site:
+  title: KISDigital
+  description: ColdFusion, ColdBox, CommandBox and other assorted musings
+  author: Robert Zehnder
+  url: https://kisdigital.com
+  image: https://static.kisdigital.com/kisdigital-logo.jpg
+--->
 <cfoutput>
 <!doctype html>
 <html lang="en">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<title>#prc.meta.title#</title>
-	<meta name="description" content="#prc.meta.description#">
-	<meta name="author" content="#prc.meta.author#">
+	<title>#prc.site.title#</title>
+	<meta name="description" content="#prc.site.description#">
+	<meta name="author" content="#prc.site.author#">
 	<meta name="twitter:widgets:theme" content="light">
 	<meta name="twitter:widgets:border-color" content="##55acee">
-	<!--- <base href="#event.getHTMLBaseURL()#" /> --->
-	<cfloop array="#prc.headers#" index="header">
-		<cfif header.keyExists("property")>
-			<meta property="#header.property#" content="#header.content#" />
-		<cfelse>
-			<meta name="#header.name#" content="#header.content#" />
-		</cfif>
-	</cfloop>
+	<cfif prc.type eq "post">
+		<meta property="og:title" content="#prc.title#" />
+		<meta name="twitter:title" content="#prc.title#" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta property="og:description" content="#prc.description#" />
+		<meta name="twitter:description" content="#prc.description#" />
+		<meta property="og:image" content="#prc.image#" />
+		<meta name="twitter:image" content="#prc.image#" />
+	<cfelse>
+		<meta property="og:title" content="#prc.site.title#" />
+		<meta name="twitter:title" content="#prc.site.title#" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta property="og:description" content="#prc.site.description#" />
+		<meta name="twitter:description" content="#prc.site.description#" />
+		<meta property="og:image" content="#prc.site.image#" />
+		<meta name="twitter:image" content="#prc.site.image#" />
+	</cfif>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism-themes/1.9.0/prism-one-dark.min.css" integrity="sha512-c6S8OdtvoqZCbMfA1lWE0qd368pLdFvVHVILQzNizfowC+zV8rmVKdSlmL5SuidvATO0A7awDg53axd+s/9amw==" crossorigin="anonymous" referrerpolicy="no-referrer" />

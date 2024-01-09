@@ -20,7 +20,7 @@ excludeFromCollections: true
 	writeoutput('
 <item>
 	<title>#p.title#</title>
-	<link>#p.meta.url##p.permalink#</link>
+	<link>#p.site.url##p.permalink#</link>
 	<description>#p.description#</description>
 	<author>#p.author#</author>
 	<pubDate>#dateFormat(p.publishDate, "yyyy-mm-dd")#</pubDate>

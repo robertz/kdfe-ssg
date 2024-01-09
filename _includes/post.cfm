@@ -17,13 +17,13 @@
 					</div>
 				</div>
 				<div class="my-3">
-					<a href="https://www.facebook.com/sharer/sharer.php?u=#prc.meta.url##prc.permalink#" class="text-decoration-none" target="_blank">
+					<a href="https://www.facebook.com/sharer/sharer.php?u=#prc.site.url##prc.permalink#" class="text-decoration-none" target="_blank">
 						<i class="bi bi-facebook px-1 text-white fs-5"></i>
 					</a>
-					<a href="https://www.twitter.com/share?url=#prc.meta.url##prc.permalink#" class="text-decoration-none" target="_blank">
+					<a href="https://www.twitter.com/share?url=#prc.site.url##prc.permalink#" class="text-decoration-none" target="_blank">
 						<i class="bi bi-twitter px-1 text-white fs-5"></i>
 					</a>
-					<a href="https://www.linkedin.com/sharing/share-offsite/?url=#prc.meta.url##prc.permalink#" class="text-decoration-none" target="_blank">
+					<a href="https://www.linkedin.com/sharing/share-offsite/?url=#prc.site.url##prc.permalink#" class="text-decoration-none" target="_blank">
 						<i class="bi bi-linkedin px-1 text-white fs-5"></i>
 					</a>
 				</div>

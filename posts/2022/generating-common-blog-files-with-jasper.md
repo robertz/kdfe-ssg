@@ -41,7 +41,7 @@ writeoutput('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">#chr(10
 for(var p in getPages(collections)){
 writeoutput('
 <url>
- <loc>#prc.meta.url##p.permalink#</loc>
+ <loc>#prc.site.url##p.permalink#</loc>
  <lastmod>#lastMod#</lastmod>
 </url>
 ');
