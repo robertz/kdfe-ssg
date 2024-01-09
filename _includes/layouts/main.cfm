@@ -18,8 +18,8 @@ site:
 	<meta name="twitter:widgets:theme" content="light">
 	<meta name="twitter:widgets:border-color" content="##55acee">
 	<cfif prc.type eq "post">
-		<meta property="og:title" content="#prc.title#" />
-		<meta name="twitter:title" content="#prc.title#" />
+		<meta property="og:title" content="#prc.site.title# | #prc.title#" />
+		<meta name="twitter:title" content="#prc.site.title# | #prc.title#" />
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta property="og:description" content="#prc.description#" />
 		<meta name="twitter:description" content="#prc.description#" />
