@@ -30,7 +30,7 @@
 				<div class="my-3 text-white post decorate-links">
 					#prc.content#
 				</div>
-				<cfinclude template="disqus.cfm" />
+				<cfinclude template="giscus.cfm" />
 			</div>
 		</div>
 	</div>
