@@ -19,7 +19,7 @@
 			</div>
 			<div class="card-text">
 				<cfloop array="#collections.tags#" index="tag">
-					<a href="/tag/#generateSlug(tag)#"> <span class="h5"><span class="badge bg-info text-muted p-2">#tag#</span></span></a>
+					<a href="/tag/#generateSlug(tag)#"> <span class="h5"><span class="badge bg-info text-muted p-2 my-1">#tag#</span></span></a>
 				</cfloop>
 			</div>
 		</div>
