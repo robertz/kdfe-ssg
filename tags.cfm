@@ -4,7 +4,7 @@ view: page
 permalink: /tag/{{tag}}.html
 pagination:
   alias: tag
-  data: ["cfml","commandbox","food","misc","sql"]
+  data: collections.tags
 --->
 <cfoutput>
 	<h4>Posts tagged as #prc.tag#</h4>
