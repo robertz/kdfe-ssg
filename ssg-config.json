@@ -1,8 +1,8 @@
 {
 	"outputDir": "_site",
 	"passthru": [
-		"/favicon.ico",
-		"/assets"
+		"favicon.ico",
+		"assets"
 	],
 	"ignore": []
 }

@@ -10,7 +10,7 @@ tags:
 - cfml
 - commandbox
 published: true
-publishDate: 2022-07-06
+date: 2022-07-06
 ---
 Photo by <a href="https://unsplash.com/@kaitlynbaker?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Kaitlyn Baker</a> on <a href="https://unsplash.com/s/photos/tech-writing?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
 
@@ -169,7 +169,7 @@ tags:
 - Getting Started
 image: https://static.kisdigital.com/images/jasper/getting-started-00-cover.jpeg
 published: true
-publishDate: 2020-05-30
+date: 2020-05-30
 ---
 ```
 

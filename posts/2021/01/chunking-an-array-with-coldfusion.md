@@ -4,7 +4,7 @@ type: post
 title: Chunking an Array with ColdFusion
 slug: chunking-an-array-with-coldfusion
 author: Robert Zehnder
-publishDate: 2021-01-04
+date: 2021-01-04
 published: true
 image: https://static.kisdigital.com/images/chunking-an-array-with-coldfusion/00_cover.jpeg
 description: Quickly chunk an array by the specified chunk size.

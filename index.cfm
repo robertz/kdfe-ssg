@@ -16,7 +16,7 @@ view: page
 								<span class="badge bg-light m-1 p-2 h5 text-dark">#tag#</span>
 							</cfloop>
 							<p class="text-white small text-uppercase">
-								#dateFormat(collections.post[i].publishdate, "MMMM d, YYYY")# /
+								#dateFormat(collections.post[i].date, "MMMM d, YYYY")# /
 								#collections.post[i].author#
 							</p>
 						</div>

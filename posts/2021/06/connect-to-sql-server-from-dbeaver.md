@@ -9,7 +9,7 @@ image: https://static.kisdigital.com/images/2021/06/dbeaver.png
 tags: 
 - sql
 published: true
-publishdate: 2021-06-22
+date: 2021-06-22
 ---
 
 Yesterday I was able to connect to SQL Server with SSMS running on a Windows 10 VM. That allowed me to complete the things that needed to be done, but I did not like having to run SSMS just to view the database. My tool of choice for working with databases is [DBeaver](https://dbeaver.io), it is a free cross-platform database tool that supports pretty much any database you throw at it. I was able to finally get the connection working.

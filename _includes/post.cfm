@@ -11,7 +11,7 @@
 							<span class="badge bg-light m-1 p-2 h5 text-dark">#tag#</span>
 						</cfloop>
 						<p class="text-white small text-uppercase">
-							#dateFormat(prc.publishdate, "MMMM d, YYYY")# /
+							#dateFormat(prc.date, "MMMM d, YYYY")# /
 							#prc.author#
 						</p>
 					</div>

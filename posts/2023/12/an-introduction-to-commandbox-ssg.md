@@ -4,7 +4,7 @@ type: post
 title: An introduction to commandbox-ssg
 author: Robert Zehnder
 slug: an-introduction-to-commandbox-ssg
-publishDate: 2023-12-14 18:00:00
+date: 2023-12-14 18:00:00
 published: true
 image: https://static.kisdigital.com/ssg/2023/woman-writing.jpeg
 description: How to get started with commandbox-ssg
@@ -97,7 +97,7 @@ tags:
 - movies
 image: https://static.kisdigital.com/images/marvel/00_anthology.jpeg
 published: true
-publishDate: 2020-05-18
+date: 2020-05-18
 ---
 ```
 

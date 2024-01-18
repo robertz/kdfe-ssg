@@ -4,7 +4,7 @@ type: post
 title: Building a CF sitemap generator
 author: Robert Zehnder
 slug: building-a-cf-sitemap-generator
-publishDate: 2022-06-13
+date: 2022-06-13
 published: true
 image: https://static.kisdigital.com/images/2022/06/spiderweb.jpeg
 description: A simple script to crawl a site and build a sitemap.xml

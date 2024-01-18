@@ -4,7 +4,7 @@ type: post
 title: Array slice and timing
 author: Robert Zehnder
 slug: array-slice-and-timing
-publishDate: 2021-04-13
+date: 2021-04-13
 published: true
 image: https://static.kisdigital.com/images/array-slice-and-timing/00_cover.jpeg
 description: With great power comes great responsibility

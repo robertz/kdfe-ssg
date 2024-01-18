@@ -4,7 +4,7 @@ type: post
 title: Bringing back commandbox-ssg
 author: Robert Zehnder
 slug: bringing-back-commandbox-ssg
-publishDate: 2023-12-11 18:00:00
+date: 2023-12-11 18:00:00
 published: true
 image: https://static.kisdigital.com/images/2022/06/commandbox.png
 description: I had paused development of commandbox-ssg for a while, but now it is back

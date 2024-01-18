@@ -9,7 +9,7 @@ image: https://static.kisdigital.com/images/quickly-transform-xml-to-json-with-o
 tags: 
 - cfml
 published: true
-publishdate: 2020-12-16
+date: 2020-12-16
 ---
 I was developing an API wrapper back in October that would allow posting a JSON to payload to a legacy SOAP endpoint. Transforming the JSON payload to a valid SOAP envelope was a bit of a painful experience but transforming an XML response back to ColdFusion was no problem at all.
 

@@ -4,7 +4,7 @@ type: post
 title: Commandbox-ssg updates
 author: Robert Zehnder
 slug: commandbox-ssg-updates
-publishDate: 2023-12-19 18:00:00
+date: 2023-12-19 18:00:00
 published: true
 image: https://static.kisdigital.com/ssg/2023/serenity.jpg
 description: What has been going on with commandbox-ssg lately

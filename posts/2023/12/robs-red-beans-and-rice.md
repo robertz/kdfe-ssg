@@ -4,7 +4,7 @@ type: post
 title: Rob's red beans and rice recipe
 author: Robert Zehnder
 slug: robs-red-beans-and-rice
-publishDate: 2023-12-26 18:00:00
+date: 2023-12-26 18:00:00
 published: true
 image: https://static.kisdigital.com/ssg/2023/chef-making-red-beans.jpg
 description: This is my family's favorite red beans and rice recipe

@@ -9,7 +9,7 @@ image: https://static.kisdigital.com/images/opengraph/photo-1495020689067-958852
 tags: 
 - cfml
 published: true
-publishdate: 2020-06-04
+date: 2020-06-04
 ---
 Honestly, John Krasinski was ahead of the curve when he started his web series, Some Good News. Which got me thinking that there really is not a place to find good news. Reading through the feed on any given day and you can easily understand why Facebook decided to pay out $52 million dollars to its moderators as compensation for mental health issues.
 

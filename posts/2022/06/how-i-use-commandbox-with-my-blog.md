@@ -10,7 +10,7 @@ tags:
 - commandbox
 - cfml
 published: true
-publishdate: 2022-06-23
+date: 2022-06-23
 ---
 Over the course of the last year my blog has been through many revamps and rewrites. I wrote a CF static site generator called Jasper that manages content by dropping markdown files into the `/posts` folder, dynamically generating a static site that can be deployed anywhere. The current iteration of the blog is running Jasper as a server; Instead of reading markdown files, posts are returned from a database.
 

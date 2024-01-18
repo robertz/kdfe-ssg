@@ -4,7 +4,7 @@ type: post
 title: Commandbox-ssg January Update
 author: Robert Zehnder
 slug: commandbox-ssg-january-update
-publishDate: 2024-01-09 18:00:00
+date: 2024-01-09 18:00:00
 published: true
 image: https://static.kisdigital.com/ssg/2024/construction.jpg
 description: Commandbox-ssg recent changes

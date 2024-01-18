@@ -4,7 +4,7 @@ type: post
 title: ColdFusion API Basics - Remote Authentication
 author: Robert Zehnder
 slug: coldfusion-api-basics-remote-authentication
-publishDate: 2020-07-21
+date: 2020-07-21
 published: true
 image: https://static.kisdigital.com/images/coldfusion-api-basics-remote-authentication/00_cover.jpeg
 description: Outlining the major remote authentication paradigms

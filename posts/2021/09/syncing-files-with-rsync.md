@@ -9,7 +9,7 @@ image: https://static.kisdigital.com/images/2021/09/00-syncing-files-with-rsync.
 tags:
 - misc
 published: true
-publishdate: 2021-09-28
+date: 2021-09-28
 ---
 A few weeks ago I was looking through my favorite reddits and came across a thread where a redditor was asking how
 to programmatically sync their application to the server after it has been built. There were a lot of answers, most of

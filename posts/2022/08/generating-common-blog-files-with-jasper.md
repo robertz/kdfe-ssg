@@ -10,7 +10,7 @@ tags:
 - cfml
 - commandbox
 published: true
-publishdate: 2022-08-02
+date: 2022-08-02
 ---
 My schedule has been full lately leaving little time for fun side projects, but one thing I really wanted to get working in Jasper was the ability to generate templates from CFML. Eleventy allows you to set the output file using the permalink attribute in the front matter and generate a template dynamically using liquid script. I would like Jasper to function in much the same way, but using CFML to generate the page.
 

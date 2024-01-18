@@ -4,7 +4,7 @@ type: post
 title: Commandbox-ssg with data and updated pagination support
 author: Robert Zehnder
 slug: commandbox-ssg-with-data-and-updated-pagination-support
-publishDate: 2024-01-17 18:00:00
+date: 2024-01-17 18:00:00
 published: true
 image: https://static.kisdigital.com/ssg/2024/serenity.jpg
 description: Commandbox-ssg now with data import and pagination enhancements

@@ -4,7 +4,7 @@ type: post
 title: Chunking an Array with ColdFusion Revisited
 author: Robert Zehnder
 slug: chunking-an-array-with-coldfusion-revisited
-publishDate: 2021-01-04
+date: 2021-01-04
 published: true
 image: https://static.kisdigital.com/images/chunking-an-array-with-coldfusion-revisited/00_cover.jpeg
 description: Revisiting chunking ColdFusion arrays

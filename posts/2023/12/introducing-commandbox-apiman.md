@@ -10,7 +10,7 @@ tags:
 - commandbox
 - cfml
 published: true
-publishdate: 2023-12-01 18:00:00
+date: 2023-12-01 18:00:00
 ---
 In the dynamic world of technology, my latest addition to the developer's toolkit is commandbox-apiman, a sleek and 
 intuitive command-line interface (CLI) akin to curl, designed for seamless interaction with API endpoints.
