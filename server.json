@@ -2,6 +2,11 @@
     "app":{
         "cfengine":"none"
     },
+    "runwar":{
+        "options":{
+            "engineName":""
+        }
+    },
     "web":{
         "http":{
             "port":"8888"

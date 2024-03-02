@@ -1,7 +1,6 @@
 <!---
 layout: none
 permalink: /rss
-excludeFromCollections: true
 site:
   title: KISDigital
   description: ColdFusion, ColdBox, CommandBox and other assorted musings
@@ -14,7 +13,7 @@ site:
 			return item.excludeFromCollections == false && (item.type == "post");
 		});
 		ret.sort( ( e1, e2 ) => {
-			return compare( e2.permalink, e1.permalink );
+			return dateCompare( e2.date, e1.date );
 		} );
 		return ret;
 	}
@@ -28,7 +27,7 @@ site:
 	<link>#p.site.url##p.permalink#</link>
 	<description>#p.description#</description>
 	<author>#prc.site.author#</author>
-	<pubDate>#dateTimeFormat(p.publishDate, "ddd, dd mmm yyyy HH:nn:ss")# GMT</pubDate>
+	<pubDate>#dateTimeFormat(p.date, "ddd, dd mmm yyyy HH:nn:ss")# GMT</pubDate>
 </item>
 ');
 }
