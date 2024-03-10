@@ -1,7 +1,7 @@
 ---
 layout: main
 type: post
-title: Prevent multiple YouTube videso playing simultaneously
+title: Prevent multiple YouTube videos playing simultaneously
 author: Robert Zehnder
 slug: prevent-multiple-youtube-videos-playing-simultaneously
 date: 2024-03-01 18:00:00
