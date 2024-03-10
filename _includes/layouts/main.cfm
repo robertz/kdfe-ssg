@@ -64,6 +64,7 @@ site:
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/prism.min.js" integrity="sha512-YBk7HhgDZvBxmtOfUdvX0z8IH2d10Hp3aEygaMNhtF8fSOvBZ16D/1bXZTJV6ndk/L/DlXxYStP8jrF77v2MIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script src="/assets/js/global.js?v=#prc.build_start#"></script>
+	<script data-goatcounter="https://kdfe-jasper.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
 </cfoutput>
