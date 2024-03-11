@@ -13,7 +13,7 @@ tags:
 ---
 Last year I started working on a project called Renegade Forums. This was my updated take on legacy projects like Ray Camden's [Galleon Forums](https://github.com/cfjedimaster/galleon) from back in the day. I do love ColdFusion and ColdBox, so I thought I would come up with a modern implementation of a forum which drew a lot of inspiration from Reddit. It actually started as a mild form of protest when Reddit was started to charge monthly for API access, shutting down many of the third party apps we all know and loved.
 
-One of the first features I implemented was the ability to share web links and YouTube videos. When the feed had multiple YouTube videos one of the irst issues I encountered were multiple YouTube videos playing simultaneously which was less than optimial. If I played a video I needed a way to stop any other video that was currently playing. 
+One of the first features I implemented was the ability to share web links and YouTube videos. When the feed had multiple YouTube videos one of the first issues I encountered were multiple YouTube videos playing simultaneously which was less than optimial. If I played a video I needed a way to stop any other video that was currently playing. 
 
 As many sites out there that show YouTube videos you would think it would be an easy fix, alas, that was not the case. If you google for it, there are a lot of questions but not a lot of answers. As it turns out, it was easy to do with the iFrame YouTube player API and a little bit of javascript.
 
