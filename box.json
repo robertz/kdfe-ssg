@@ -34,7 +34,8 @@
         "URL":""
     },
     "scripts":{
-		"deploy": "box ssg build && !netlify deploy --prod --dir=_site"
+		"deploy": "box ssg build && !netlify deploy --prod --dir=_site",
+		"serve": "!netlify dev --dir=_site"
 	},
     "shortDescription":"A sweet package",
     "slug":"ssg-project",
