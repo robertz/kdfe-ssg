@@ -4,5 +4,7 @@
 		"favicon.ico",
 		"assets"
 	],
-	"ignore": []
+	"ignore": [
+		"node_modules"
+	]
 }
