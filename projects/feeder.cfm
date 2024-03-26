@@ -17,8 +17,10 @@ title: feeder
 	<hr>
 
 	<ul>
-		<template x-for="item in feedData" :key="item.title">
-			<li x-text="item.title"></li>
+		<template x-for="item in sortedFeeds" :key="item.title">
+			<li>
+				<a x-bind:href="item.link" x-text="item.title" class="post-link text-decoration-none" target="_blank"></a>
+			</li>
 		</template>
 	</ul>
 
