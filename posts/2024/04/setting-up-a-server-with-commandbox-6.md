@@ -40,6 +40,7 @@ sudo apt install openjdk-11-jdk
 ```
 
 <br>
+
 Once both CommandBox and Java have been installed, it is time to focus on the configuration. This is accomplished by creating a directory that will contain the webroots for the servers. In the exammple below you can a site setup with the path `/path/to/webroot`. In this scenario `server.json` will live in the `/path/to/` folder.
 
 ```js
