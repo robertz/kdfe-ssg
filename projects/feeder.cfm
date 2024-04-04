@@ -4,7 +4,15 @@ layout: main
 title: feeder
 --->
 <div x-data="app">
-	<!--- <input type="text" id="text"> --->
+	<div class="row mb-5">
+		<div class="col-10">
+			<input type="text" x-model="addFeed" class="form-control">
+		</div>
+		<div class="col-2">
+			<button class="btn btn-primary" @click="addNewFeed">Add</button>
+		</div>
+	</div>
+
 
 	<div>
 		<ul>
@@ -17,7 +25,7 @@ title: feeder
 	<hr>
 
 	<ul>
-		<template x-for="item in sortedFeeds" :key="item.title">
+		<template x-for="item in sortedFeeds">
 			<li>
 				<a x-bind:href="item.link" x-text="item.title" class="post-link text-decoration-none" target="_blank"></a>
 			</li>
