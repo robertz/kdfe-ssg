@@ -170,6 +170,6 @@ sudo certbot --nginx -d domain.com
 
 ### Wrapping Up
 
-This is the first time I have setup a multi-site server using CommandBox 6. Overall it was easy getting everything configured, I was up and running within an hour. There are still a few loose ends to figure out, like automatically restarting CommandBox on a server restart. I am sure that is already documented, I just have not looked in ot it yet.
+This is the first time I have setup a multi-site server using CommandBox 6. Overall it was easy getting everything configured, I was up and running within an hour. There are still a few loose ends to figure out, like automatically restarting CommandBox on a server restart. I am sure that is already documented, I just have not looked in to it yet.
 
 I welcome any comments and/or suggestions.
