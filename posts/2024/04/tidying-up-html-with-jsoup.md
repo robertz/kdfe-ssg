@@ -18,4 +18,4 @@ Ben Nadel recently posted about his [CF_SaveFile Custom Tag in ColdFusion](https
 
 Then last night while I was eating dinner I thought "I bet jSoup can handle that." After reading through the documentation this morning I found out I was right. If you call jSoup's `parse()` function it will return tidy HTML. There were trials and errors getting jSoup working properly in `commandbox-ssg` but I am fairly certain I have worked out the kinks. As of version 0.2.0, `commandbox-ssg` will pipe all output through jSoup to tidy the HTML file contents before writing to the file system.
 
-Honestly jSoup is probably one of my favorite libraries to work with because of its versatility. Now I can add formatting HTML for static pages to that list. 
+Honestly jSoup is probably one of my favorite libraries to work with because of its versatility. Now I can add formatting HTML for static pages. 
