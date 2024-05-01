@@ -248,6 +248,4 @@ The final line is where all the magic happens. Calling jSoup `parse()` on the ra
 
 ### Conclusion
 
-In the end, I was able to get `commandbox-ssg` to output nicely formatted HTML using only ColdFusion. I have used jSoup a lot, but never like this. 
-
-I learn something new every day.
+In the end, I was able to get `commandbox-ssg` to output nicely formatted HTML using only ColdFusion, `node` not required.
