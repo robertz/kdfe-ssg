@@ -14,7 +14,7 @@ tags:
 ---
 After my [last post](https://kisdigital.com/posts/2024/04/tidying-up-html-with-jsoup) a couple of buddies said I did not really explain the solution and the post felt unfinished. After going back and reading it, I would agree. I will go in to more detail here and explain things in more detail.
 
-### The Issue: Identation and Whitespace
+### The Issue: Indentation and Whitespace
 
 The output of `commandbox-ssg` has always been something that makes my OCD tingle. When `build` generates a site, templates are rendered in steps: first the view gets rendered, the next step is to render the page layout around the view, and finally the layout is applied. Due to how things are processed the indentation is "chunky" and the rendering process will also generate blank when processing the CFML templates.
 
