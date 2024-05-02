@@ -3,6 +3,7 @@ site:
   url: https://kisdigital.com
 layout: none
 permalink: /sitemap.xml
+skip_beautify: true
 --->
 <cfscript>
 	function getPages(collections){
