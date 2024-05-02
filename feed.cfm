@@ -1,6 +1,7 @@
 <!---
 layout: none
 permalink: /rss
+skip_beautify: true
 site:
   title: KISDigital
   description: ColdFusion, ColdBox, CommandBox and other assorted musings
