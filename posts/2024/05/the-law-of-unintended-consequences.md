@@ -78,7 +78,7 @@ Here is the `getOutfile()` method modified to handle file extensions:
 
 <br>
 
-Next the `renderTemplate()` needs to be modified to process files with `html` extension to be post-processed by jSoup and just render other template types. I have added a check to see if `prc.fileExt` is `html`, if so it will get processed through jSoup, other `prc.fileExt` types are ignored and returned as-is.
+Next the `renderTemplate()` needs to be modified so files with `html` extension will be post-processed by jSoup and just render other template types. I have added a check to see if `prc.fileExt` is `html`, if so it will get processed through jSoup, other `prc.fileExt` types are ignored and returned as-is.
 
 Also, right above the `return` you will notice I have added a check to see if `renderedContent` is XML. This will catch instances where file extension was not specified in the permalink, but it is returning XML content. If so, it will update `prc.fileExt` to `xml`.
 
