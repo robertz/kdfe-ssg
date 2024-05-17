@@ -198,4 +198,4 @@ The pages are now rendering properly with the correct file extensions.
 
 <br>
 
-I guess I got a bit ahead of myself and pushed the last release too early. Once I hammer things a bit I will push `commandbox 0.2.1` to forgebox with working content type detection.
+I guess I got a bit ahead of myself and pushed the last release too early. Once I hammer things a bit I will push `commandbox 0.2.2` to forgebox with working content type detection.
