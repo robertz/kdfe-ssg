@@ -10,7 +10,7 @@ tags:
 - commandbox
 - cfml
 published: true
-date: 2024-05-27 18:00:00
+date: 2024-05-17 18:00:00
 ---
 It is easy to get started working with BoxLang, but I thought I would put together a quick post on how to get started with a development server. The first step is to setup your webroot.
 
