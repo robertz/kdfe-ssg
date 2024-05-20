@@ -12,6 +12,8 @@ tags:
 published: true
 date: 2024-05-17 18:00:00
 ---
+> This post has been updated to specify the --save flag with the bx-compat module and the boxlang.json settings documentation.
+
 It is easy to get started working with BoxLang, but I thought I would put together a quick post on how to get started with a development server. The first step is to setup your webroot.
 
 ```bash
@@ -40,18 +42,22 @@ box install bx-compat --save
 Once the `bx-compat` module has been installed, set the appropriate engine for the application. This is accomplished by creating `boxlang.json` inside your webroot.
 
 ```js
-"modules" : {
-    "compat" : {
-        "disabled" : false,
-        "settings" : {
-            "isAdobe" : false,
-            "isLucee" : true
-        }
-    }
+{
+	"modules" : {
+		"compat" : {
+			"disabled" : false,
+			"settings" : {
+				"isAdobe" : false,
+				"isLucee" : true
+			}
+		}
+	}
 }
 ```
 
 <br>
+
+You can find a reference to all `boxlang.json` settings [here](https://boxlang.ortusbooks.com/runtime/configuration).
 
 Once all of that is done, we can go ahead and scaffold our new application using the ColdBox advanced script template (or you can just start coding).
 
