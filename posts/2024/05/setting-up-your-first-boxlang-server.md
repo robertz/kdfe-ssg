@@ -32,7 +32,7 @@ box install commandbox-boxlang
 The next step will be to install the BoxLang compatability module. This will populate the `server` scope with the appropriate engine details.
 
 ```bash
-box install bx-compat
+box install bx-compat --save
 ```
 
 <br>
