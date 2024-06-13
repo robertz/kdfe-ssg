@@ -3,7 +3,7 @@ layout: main
 type: post
 title: Scraping Recipes Using ColdFusion
 slug: scraping-recipes-using-coldfusion
-description: Robert using ColdFusion to scrape recipes and return as API data
+description: Robert explains using ColdFusion to scrape recipes and return as API data
 author: Robert Zehnder
 image: https://static.kisdigital.com/ssg/2024/dog-cooking-in-the-kitchen.jpg
 tags: 
@@ -12,7 +12,7 @@ tags:
 published: true
 date: 2024-06-13 18:00:00
 ---
-Yesteray Ray Camden wrote an interesting [blog post](https://www.raymondcamden.com/2024/06/12/scraping-recipes-using-nodejs-pipedream-and-json-ld) about scraping recipes using node.js, Pipedream, and JSON-LD. It looked really neat so I thought I would see what it would take to create the service in ColdFusion.
+Yesterday Ray Camden wrote an interesting [blog post](https://www.raymondcamden.com/2024/06/12/scraping-recipes-using-nodejs-pipedream-and-json-ld) about scraping recipes using node.js, Pipedream, and JSON-LD. It looked really neat so I thought I would see what it would take to create the service in ColdFusion.
 
 Ray does a great job of explaining in detail  how he got the idea to write his API. If you would like the background, please check out his post linked above.
 
