@@ -12,7 +12,7 @@ tags:
 published: true
 date: 2024-05-17 18:00:00
 ---
-> This post has been updated to specify the --save flag with the bx-compat module and the boxlang.json settings documentation.
+> This post has been updated to specify the --save flag with the bx-compat module and the boxlang.json settings documentation. Updating default engine to JDK21
 
 It is easy to get started working with BoxLang, but I thought I would put together a quick post on how to get started with a development server. The first step is to setup your webroot.
 
@@ -31,10 +31,14 @@ box install commandbox-boxlang
 
 <br>
 
-The next step will be to install the BoxLang compatability module. This will populate the `server` scope with the appropriate engine details.
+The next step will be to install the BoxLang compatability module. This will populate the `server` scope with the appropriate engine details. The easiest way to ensure this module is installed is to add it to `onServerInitialInstall` in the `scripts` section of your `box.json`. If you `forget` the server, it will reinstall the module the next time it is started.
 
-```bash
-box install bx-compat --save
+```js
+    ...
+    "scripts":{
+        "onServerInitialInstall":"install bx-compat"
+    },
+    ...
 ```
 
 <br>
@@ -70,12 +74,12 @@ box coldbox create app
 Now the groundwork is done, it is time to spin up the server.
 
 ```bash
-box server start cfengine=boxlang javaVersion=openJDK17_jdk
+box server start cfengine=boxlang javaVersion=openJDK21_jdk
 ```
 
 <br>
 
-If you do not have the Java 17 JDK installed you will need to specify the Java version to use. Currently BoxLang requires the use of the JDK and not just the JRE.
+If you do not have the Java 21 JDK installed you will need to specify the Java version to use. Currently BoxLang requires the use of the JDK and not just the JRE.
 
 You should now have a BoxLang server up and running.
 
