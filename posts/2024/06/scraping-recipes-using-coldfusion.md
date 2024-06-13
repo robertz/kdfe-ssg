@@ -7,6 +7,7 @@ description: Robert using ColdFusion to scrape recipes and return as API data
 author: Robert Zehnder
 image: https://static.kisdigital.com/ssg/2024/dog-cooking-in-the-kitchen.jpg
 tags: 
+- coldbox
 - cfml
 published: true
 date: 2024-06-13 18:00:00
