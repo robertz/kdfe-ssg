@@ -31,7 +31,9 @@ My API server is running ColdBox, so I have created a handler that will process 
 Next filter the results looking for instances of `ld+json` elements. If found, process the first element. If everything is copacetic, the results are generated based on the data parsed. Multiple recipes on the page, you are just getting the first one.
 
 ```js
-component extends="coldbox.system.EventHandler" {
+component extends="coldbox.system.RestHandler" {
+
+ this.allowedMethods = { "index" : "GET" };
 
  property name="jSoup" inject="javaLoader:org.jsoup.Jsoup";
 
@@ -40,54 +42,81 @@ component extends="coldbox.system.EventHandler" {
   var recipeURL = event.getValue( "url", "" );
 
   // Is the url valid-ish?
-  if ( !isValid( "url", recipeURL ) ) return {};
+  if ( !isValid( "url", recipeURL ) ) {
+   event.getResponse().setError( true );
+   event.getResponse().addMessage( "url parameter should be valid" );
+  }
 
-  // Parse the page using jSoup
-  var jsDoc = jSoup
-   .connect( recipeURL )
-   .followRedirects( true )
-   .userAgent( "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0" )
-   .get();
+  if ( !event.getResponse().getError() ) {
+   // Parse the page using jSoup
+   var jsDoc = variables.jSoup
+    .connect( recipeURL )
+    .followRedirects( true )
+    .userAgent( "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0" )
+    .get();
 
-  // Filter the data
-  var tag = jsDoc.select( "script[type=application/ld+json]" );
+   // Filter the data
+   var tag = jsDoc.select( "script[type=application/ld+json]" );
 
-  // Not found? Do not continue processing
-  if ( !tag.len() ) return {};
+   // Not found? Do not continue processing
+   if ( !tag.len() ) {
+    event.getResponse().setError( true );
+    event.getResponse().addMessage( "no ld+json elements found" );
+   }
 
-  // Found? Grab the first item
-  tag = tag.first();
+   if ( !event.getResponse().getError() ) {
+    // Found? Grab the first item
+    tag = tag.first();
 
-  var parsed = {};
+    var parsed = {};
 
-  // Is it JSON?
-  if ( isJSON( tag.html() ) ) parsed = deserializeJSON( tag.html() );
+    // Is it JSON?
+    if ( isJSON( tag.html() ) ) parsed = deserializeJSON( tag.html() );
 
-  // Is it array data?
-  if ( isArray( parsed ) ) parsed = parsed[ 1 ];
+    // Is it array data?
+    if ( isArray( parsed ) ) parsed = parsed[ 1 ];
 
-  // Build the results
-  if ( !parsed.isEmpty() ) {
-   result[ "name" ]         = parsed.name;
-   result[ "image" ]        = parsed.image;
-   result[ "description" ]  = parsed.description;
-   result[ "cookTime" ]     = parsed.cookTime;
-   result[ "prepTime" ]     = parsed.prepTime;
-   result[ "totalTime" ]    = parsed.totalTime;
-   result[ "category" ]     = parsed.recipeCategory;
-   result[ "cuisine" ]      = parsed.recipeCuisine;
-   result[ "ingredients" ]  = parsed.recipeIngredient;
-   result[ "instructions" ] = [];
-   for ( var instruction in parsed.recipeInstructions ) {
-    if ( !isStruct( instruction ) ) {
-     result.instructions.append( instruction );
-    } else {
-     if ( instruction[ "@type" ] == "HowToStep" ) result.instructions.append( instruction.text );
+    // Build the results
+    if ( !parsed.isEmpty() && parsed.keyExists( "@type" ) && parsed[ "@type" ].findNoCase( "recipe" ) ) {
+     try {
+      result[ "name" ]         = parsed.name;
+      result[ "image" ]        = parsed.image;
+      result[ "description" ]  = parsed.description;
+      result[ "cookTime" ]     = parsed.cookTime;
+      result[ "prepTime" ]     = parsed.prepTime;
+      result[ "totalTime" ]    = parsed.totalTime;
+      result[ "category" ]     = parsed.recipeCategory;
+      result[ "cuisine" ]      = parsed.recipeCuisine;
+      result[ "ingredients" ]  = parsed.recipeIngredient;
+      result[ "instructions" ] = [];
+      for ( var instruction in parsed.recipeInstructions ) {
+       if ( !isStruct( instruction ) ) {
+        result.instructions.append( instruction );
+       } else {
+        if ( instruction[ "@type" ] == "HowToStep" )
+         result.instructions.append( instruction.text );
+       }
+      }
+
+      var duration = createObject( "java", "java.time.Duration" );
+      for ( var el in [ "cookTime", "prepTime", "totalTime" ] ) {
+       var temp    = "";
+       var hours   = duration.parse( result[ el ] ).toHours();
+       var minutes = duration.parse( result[ el ] ).toMinutes();
+       if ( hours ) temp &= hours & " hour" & ( hours > 1 ? "s " : " " );
+       if ( minutes ) temp &= minutes & " minutes";
+       result[ el ] = temp;
+      }
+
+      result[ "yield" ] = parsed.recipeYield[ 1 ];
+     } catch ( any e ) {
+      event.getResponse().addMessage( "parse error generating response" );
+     }
     }
    }
-   result[ "yield" ] = parsed.recipeYield[ 1 ];
   }
-  return result;
+  event.getResponse().setStatus( event.getResponse().getError() ? 400 : 200 );
+  event.getResponse().setData( result );
  }
 
 }
@@ -113,7 +142,7 @@ Result:
 
 <br>
 
-```json
+```js
 {
   "name": "Iced Pumpkin Cookies",
   "image": {
