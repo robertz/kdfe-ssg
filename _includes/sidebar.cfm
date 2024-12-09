@@ -7,7 +7,7 @@
 			</div>
 			<div class="card-text">
 				<small>
-					ColdFusion, ColdBox, CommandBox and assorted musings.
+					ColdFusion, ColdBox, CommandBox, BoxLang and assorted musings.
 				</small>
 			</div>
 		</div>
