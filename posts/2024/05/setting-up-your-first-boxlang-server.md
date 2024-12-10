@@ -6,9 +6,10 @@ slug: setting-up-your-first-boxlang-server
 description: Robert explains quickly spinning up a BoxLang server
 author: Robert Zehnder
 image: https://static.kisdigital.com/images/2022/06/commandbox.png
-tags: 
+tags:
 - commandbox
 - cfml
+- boxlang
 published: true
 date: 2024-05-17 18:00:00
 ---
