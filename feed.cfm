@@ -24,6 +24,7 @@ site:
 	writeoutput('
 <item>
 	<title>#p.title#</title>
+	<guid isPermaLink="true">#p.site.url##p.permalink#</guid>
 	<link>#p.site.url##p.permalink#</link>
 	<description>#p.description#</description>
 	<author>#prc.site.author#</author>
