@@ -3,7 +3,7 @@ layout: none
 permalink: /rss
 site:
   title: KISDigital
-  description: ColdFusion, ColdBox, CommandBox and other assorted musings
+  description: ColdFusion, ColdBox, CommandBox, BoxLang and other assorted musings
   author: robert@kisdigital.com (Robert Zehnder)
   url: https://kisdigital.com
 --->
