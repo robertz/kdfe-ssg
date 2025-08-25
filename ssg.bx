@@ -1,0 +1,611 @@
+class {
+
+	variables.cwd = expandPath(".") & "/";
+	variables.config = {
+		outputDir: "_site",
+		ignore: [],
+		passthru: []
+	};
+	variables.ignoreDirs = [ cwd & "_includes/", cwd & ".", cwd & "_site/" ];
+	variables.collections = { "all" : [], "tags" : [], "byTag" : {}, "global" : {} };
+	variables.process = {};
+	variables.baseData    = { "layouts" : {}, "views" : {} };
+
+	variables.documents = []; // list of renderable documents found
+	variables.templates = []; // data required to render each document
+
+	/**
+	 * Main build function
+	 */
+	function build(){
+		processPassthruFiles();
+		variables.documents.each(doc => {
+			printLn("Processing document: " & doc.path & doc.name);
+			processTemplate(doc.path & doc.name);
+		});
+		// processTemplate must have fun to exec the following
+		processCollectionsData();
+		processPagination();
+		generateStatic();
+	}
+
+	/**
+	 * Main entry point
+	 */
+	function main(args = []){
+		if(!args.len()) {
+			printLn("No arguments provided");
+			cliExit(1)
+		}
+
+		getProcessConfig();
+		listDocuments();
+		if(variables.process.hasIncludes) getIncludes();
+		if(variables.process.hasData) getGlobalData();
+		if(variables.process.applicationHelper) getApplicationHelper();
+		if(variables.process.hasConfig) getSSGConfig();
+
+		var command = args[1];
+
+		switch(command) {
+			case "build":
+				build();
+				break;
+			case "list":
+				printLn(variables.documents.map(doc => doc.path & doc.name).toList(char(10)));
+				break;
+			case "help":
+				printLn("Available commands: build, list, help");
+				printLn("Use 'boxlang ssg.bx build' to generate the static site.");
+				printLn("Use 'boxlang ssg.bx list' to list all documents.");
+				printLn("Use 'boxlang ssg.bx help' to display this help message.");
+				break;
+			default:
+				printLn("Unknown command: " & command);
+				cliExit(1);
+		}
+
+		cliExit(0);
+	}
+
+	// ***********************************************************************************
+	// Supporting functions
+	// ***********************************************************************************
+
+	/**
+	 * Write generated content to files
+	 */
+	function generateStatic(){
+		templates.each( ( prc ) => {
+			if ( prc.published ) {
+				try{
+					var contents = renderTemplate( prc );
+					directoryCreate(
+						getDirectoryFromPath( prc.outFile ),
+						true,
+						true
+					);
+
+					if ( process.verbose ?: false ) {
+						print.greyline(
+							" [ " & prc.inFile & " ] -> " &
+							"/" & replace( prc.outFile, cwd, "", "all" ) &
+							"  [" & prc.fileExt & "]"
+						);
+					} else {
+						printLn( "Writing file: /" & replace( prc.outFile, cwd, "", "all" ) );
+					}
+					fileWrite( prc.outFile, contents );
+				}
+				catch ( any e ) {
+					printLn( prc);
+					printLn(e)
+					abort;
+				}
+			}
+		} );
+	}
+
+	/**
+	 * Get applicationHelper.cfm if it exists
+	 */
+	function getApplicationHelper(){
+		try {
+			include "#cwd#_includes/applicationHelper.bxm" ;
+		} catch ( any e ) {
+			error( "Error loading applicationHelper.bxm :: " & e.message );
+		}
+	}
+
+	/**
+	 * Load `_data/**.json` files to `collections.global` if any exist
+	 */
+	function getGlobalData(){
+		// Load all .json files from _data directory recursively
+		var dataDir = cwd & "_data";
+		var jsonFiles = directoryList(dataDir, true, "path", (any path) => path.findNoCase(".json"));
+
+		jsonFiles.each((dataFile) => {
+			// Get file name without extension
+			var fileStem = getFileFromPath(dataFile).listFirst(".");
+			// Get relative path parts as array
+			var relPath = getDirectoryFromPath(dataFile).replace(dataDir, "");
+			var pathParts = relPath.len() ? relPath.listToArray("/") : [];
+
+			// Walk or create nested structure in collections.global
+			var target = collections.global;
+			for (var part in pathParts) {
+				if (!target.keyExists(part)) target[part] = {};
+				target = target[part];
+			}
+
+			// Deserialize JSON and assign to correct location
+			target[fileStem] = jsonDeserialize(fileRead(dataFile, "utf-8"));
+		});
+	}
+
+	/**
+	 * Load layouts and views and any associated front matter
+	 */
+	function getIncludes(){
+		// build arrays of valid layouts/views
+		var layoutsDir = cwd & "_includes/layouts";
+		var includesDir = cwd & "_includes";
+
+		var layouts = directoryList(layoutsDir, false, "path", "*.bxm");
+		layouts.each((layout) => {
+			var stem = listFirst(getFileFromPath(layout), ".");
+			process.layouts.append(stem);
+			var data = getTemplateData(layout);
+			if (data.keyExists("content")) data.delete("content");
+			baseData["layouts"][stem] = data;
+		});
+		var views = directoryList(includesDir, false, "path", (path) => {
+			return !path.findNoCase("layouts") && !path.findNoCase("applicationHelper.bxm");
+		});
+		views.each((view) => {
+			var stem = listFirst(getFileFromPath(view), ".");
+			process.views.append(stem);
+			var data = getTemplateData(view);
+			if (data.keyExists("content")) data.delete("content");
+			baseData["views"][stem] = data;
+		});
+
+	}
+
+	/**
+	 * Calculate the output filename
+	 *
+	 * @prc request context for the page
+	 */
+	function getOutfile( required struct prc ){
+		// Cache site directory prefix
+		var siteDir = cwd & "_site";
+		var outFile = "";
+
+		if (prc.type == "post") {
+			// For posts, use slug (or fileSlug) and file extension
+			var relPathArr = prc.inFile.replace(cwd, "").listToArray("/");
+			if (relPathArr.len()) {
+				relPathArr[relPathArr.len()] = (prc.keyExists("slug") ? prc.slug : prc.fileSlug) & "." & prc.fileExt;
+				outFile = siteDir & "/" & relPathArr.toList("/");
+			}
+		} else if (len(prc.permalink)) {
+			// If permalink is set, use it
+			outFile = siteDir & prc.permalink;
+			var stem = listLast(prc.permalink, "/");
+			if (stem.find(".")) {
+				prc.fileExt = stem.listRest(".");
+			} else {
+				prc.fileExt = "";
+			}
+		} else {
+			// Default: use input file's directory and name
+			var fileName = getFileFromPath(prc.inFile).listFirst(".");
+			var outDir = getDirectoryFromPath(prc.inFile).replace(cwd, "/");
+			outFile = siteDir & outDir & fileName & "." & prc.fileExt;
+		}
+		prc.outfile = outFile;
+	}
+
+	/**
+	 * Calculate permalink
+	 *
+	 * @prc request context for the page
+	 */
+	function getPermalink( required struct prc ){
+		// Remove _site/ prefix and split path into array
+		var sitePrefix = cwd & "_site/";
+		var relPath = prc.outFile.replace(sitePrefix, "");
+		var pathParts = relPath.listToArray("/");
+
+		// Handle last part: remove .html extension and "index" filename
+		var lastIdx = pathParts.len();
+		if (lastIdx > 0) {
+			var lastPart = pathParts[lastIdx];
+			if (prc.fileExt == "html") lastPart = lastPart.listFirst(".");
+			if (lastPart == "index") lastPart = "";
+			pathParts[lastIdx] = lastPart;
+		}
+
+		// Remove empty trailing part if present
+		if (pathParts.len() > 0 && pathParts[pathParts.len()] == "") pathParts.deleteAt(pathParts.len());
+
+		// Join parts to form permalink
+		prc.permalink = "/" & pathParts.toList("/");
+	}
+
+	/**
+	 * Detect options
+	 */
+	function getProcessConfig(){
+		variables.process[ "applicationHelper" ] = fileExists( cwd & "_includes/applicationHelper.bxm" );
+		variables.process[ "hasIncludes" ]       = directoryExists( cwd & "_includes" ) ? true : false;
+		variables.process[ "hasData" ]           = directoryExists( cwd & "_data" ) ? true : false;
+		variables.process[ "hasConfig" ]         = fileExists( cwd & "ssg-config.json" ) ? true : false;
+		variables.process[ "layouts" ]           = [];
+		variables.process[ "views" ]             = [];
+	}
+
+	/**
+	 * Load the current build configuration from file if it exists, otherweise return defaults
+	 */
+	function getSSGConfig(){
+		try {
+			variables.config = JSONDeserialize( fileRead( variables.cwd & "ssg-config.json", "utf-8" ) );
+			for ( var dir in config.ignore ) {
+				if ( directoryExists( variables.cwd & dir ) ) ignoreDirs.append( variables.cwd & dir );
+			}
+		} catch ( any e ) {
+			printLn( "Error loading SSG config: " & e.message );
+		}
+	}
+
+	/**
+	 * Get front matter and content of a document
+	 */
+	function getTemplateData( required string fname ){
+		// Initialize variables
+		var payload = {};
+		var yaml = "";
+		var body = "";
+		var isBXM = fname.findNoCase(".bxm") ? true : false;
+		var lines = [];
+
+		// Read all lines from file
+		var openFile = fileOpen(fname, "read");
+		try {
+			while (!fileIsEOF(openFile)) {
+				arrayAppend(lines, rTrim(fileReadLine(openFile)));
+			}
+		} catch (any e) {
+			rethrow;
+		} finally {
+			fileClose(openFile);
+		}
+
+		// Detect front matter at start of file
+		var fmStart = !isBXM ? lines.find("---") : lines.find("<!---");
+		if (fmStart == 1) {
+			var fmEnd = !isBXM ? lines.findAll("---")[2] : lines.findAll("--->")[1];
+			// Extract YAML front matter and body
+			for (var i = 2; i < fmEnd; i++) yaml &= lines[i]  & char(10);
+			for (var i = fmEnd + 1; i <= lines.len(); i++) body &= lines[i] & char(10);
+			if (yaml.len()) payload.append(yamlDeserialize(trim(yaml)));
+		} else {
+			// No front matter, treat all as body
+			body = arrayToList(lines, char(10));
+		}
+
+		// Flatten tags if nested array
+		if (payload.keyExists("tags") && isArray(payload.tags) && isArray(payload.tags[1])) {
+			payload.tags = payload.tags[1];
+		}
+
+		// Set content property, convert markdown if not BXM
+		payload["content"] = isBXM ? body : markdown(body);
+
+		return payload;
+	}
+
+	/**
+	 * List all renderable documents in the project
+	 */
+	function listDocuments(){
+		var fileList = directoryList(variables.cwd, true, "path", (any path) => {
+			return
+				((arguments.path.findNoCase(".md") || arguments.path.findNoCase(".bxm")) && !arguments.path.findNoCase("readme.md")) &&
+				!ignoreDirs.find((dir) => path.findNoCase(dir));
+		});
+		variables.documents = fileList.map((file) => {
+			return {
+				name: getFileFromPath(file),
+				path: getDirectoryFromPath(file)
+			};
+		});
+	}
+
+	/**
+	 * a function to quickly paginate data
+	 *
+	 * @data     the data to be paginated
+	 * @pageSize items per page
+	 */
+	function paginate( required array data, required numeric pageSize ){
+		var output       = [];
+		var currentChunk = 1;
+
+		if ( pageSize > 1 ) output[ 1 ] = [];
+		data.each( ( item, index ) => {
+			if ( pageSize > 1 ) {
+				output[ currentChunk ].append( item );
+			} else {
+				output.append( item, true );
+			}
+			if ( index % pageSize == 0 && index < data.len() && pageSize > 1 ) output[ ++currentChunk ] = [];
+		} );
+		return output;
+	}
+
+	/**
+	 * Generates data for `collections` scope
+	 */
+	function processCollectionsData(){
+		// Add templates to collections
+		templates.each((template) => {
+			var type = template.type ?: "";
+			var isPaginated = template.keyExists("pagination");
+			if (!template.excludeFromCollections && !isPaginated) {
+				collections.all.append(template);
+				if (type.len()) {
+					if (!collections.keyExists(type)) collections[type] = [];
+					collections[lCase(type)].append(template);
+				}
+			}
+		});
+
+		// Special processing for posts
+		if (collections.keyExists("post")) {
+			// Sort posts by date descending
+			collections.post.sort((e1, e2) => dateCompare(e2.date, e1.date));
+
+			// Build tag list and byTag mapping
+			collections.post.each((post) => {
+				if (post.keyExists("tags")) {
+					for (var tag in post.tags) {
+						if (!collections.tags.findNoCase(tag)) {
+							collections.tags.append(tag);
+						}
+						var slugifiedTag = slugify(tag);
+						if (!collections.byTag.keyExists(slugifiedTag)) collections.byTag[slugifiedTag] = [];
+						collections.byTag[slugifiedTag].append(post);
+					}
+				}
+			});
+			collections.tags = collections.tags.sort("text");
+		}
+	}
+
+	/**
+	 * Generate templates based on paginated data
+	 */
+	function processPagination(){
+		templates.each( ( prc ) => {
+			if ( prc.keyExists( "pagination" ) ) {
+				var data      = prc.pagination.data;
+				var size      = prc.pagination.keyExists( "size" ) ? prc.pagination.size : 1;
+				var targetKey = prc.pagination.keyExists( "alias" ) ? prc.pagination.alias : "pagedData";
+				// data is a string, try to retrieve from variables
+				if ( isSimpleValue( data ) ) {
+					data = structGet( prc.pagination.data );
+					// if data is a structure, return the struct key list as an array
+					if ( isStruct( data ) ) {
+						// if data is a struct, return the struct keys for iteration
+						data = structKeyList( data ).listSort( "textnocase", "asc" ).listToArray();
+					}
+				}
+
+				// set the parent prc scope for the paginated templates
+				var parent_prc = duplicate( prc );
+
+				// ensure parent template is not rendered
+				prc.published = false;
+
+				var paged = paginate( data = data, pageSize = size );
+				paged.each( ( page, index ) => {
+					var page_prc          = duplicate( parent_prc );
+					var rendered_content  = "";
+					page_prc[ targetKey ] = page;
+					page_prc.permalink    = page_prc.permalink.replace( "{{" & targetKey & "}}", page );
+					page_prc.outFile      = cwd & config.outputDir & page_prc.permalink;
+					if ( isSimpleValue( prc.pagination.data ) && isStruct( structGet( prc.pagination.data ) ) ) {
+						page_prc.append( structGet( prc.pagination.data )[ page ] );
+					}
+					getPermalink( page_prc );
+					templates.append( page_prc );
+					// tag and template type processing
+					if ( page_prc.keyExists( "tags" ) && page_prc.tags.len() ) {
+						for ( var tag in page_prc.tags ) {
+							if ( !collections.tags.findNoCase( tag ) ) collections.tags.append( tag );
+							var slugifiedTag = generateSlug( tag );
+							if ( !collections.byTag.keyExists( slugifiedTag ) ) collections.byTag[ slugifiedTag ] = [];
+							collections.byTag[ slugifiedTag ].append( page_prc );
+						}
+					}
+					// add page to types
+					if ( !collections.keyExists( page_prc.type ) && page_prc.type.len() )
+						collections[ page_prc.type ] = [];
+					if ( page_prc.type.len() ) collections[ lCase( page_prc.type ) ].append( page_prc );
+				} );
+			}
+		} );
+	}
+
+	/**
+	 * Purge output directory and move static files
+	 */
+	function processPassthruFiles(){
+		// delete the _site directory if it exists
+		if ( directoryExists( cwd & "_site" ) ) {
+			directoryDelete( cwd & "_site", true );
+		}
+		// recreate the directory
+		directoryCreate( cwd & "_site" );
+
+		try {
+			// passthru directories
+			for ( var dir in config.passthru ) {
+				if ( fileExists( cwd & dir ) ) {
+					fileCopy( cwd & dir, cwd & "_site/" & dir );
+				} else {
+					directoryCopy( cwd & dir, cwd & "_site/" & dir, true );
+				}
+			}
+		} catch ( any e ) {
+			error( e.message );
+		}
+	}
+
+	/**
+	 * Builds the PRC scope for a given template
+	 *
+	 * @template full path to the template to read
+	 */
+	function processTemplate( template ){
+		// Initialize template metadata
+		var prc = {
+			"build_start"            : "",
+			"fileSlug"               : getFileFromPath(template).listFirst("."),
+			"inFile"                 : template,
+			"outFile"                : "",
+			"title"                  : "",
+			"description"            : "",
+			"published"              : true,
+			"date"                   : "",
+			"lastModified"           : dateTimeFormat(getFileInfo(template).lastModified, "iso"),
+			"content"                : "",
+			"type"                   : "page",
+			"layout"                 : "main",
+			"view"                   : "",
+			"permalink"              : "",
+			"fileExt"                : "html",
+			"excludeFromCollections" : false
+		};
+
+		// Merge front matter from template
+		prc.append(getTemplateData(template));
+
+		// Merge layout metadata if available, without overwriting
+		var layoutMeta = baseData.layouts.keyExists(prc.layout) ? baseData.layouts[prc.layout] : false;
+		if (layoutMeta) prc.append(duplicate(layoutMeta), false);
+
+		// Merge view metadata, prioritizing explicit view over type
+		var hasView = len(prc.view);
+		if (!hasView && baseData.views.keyExists(prc.type)) {
+			prc.append(duplicate(baseData.views[prc.type]), false);
+		} else if (hasView && baseData.views.keyExists(prc.view)) {
+			prc.append(duplicate(baseData.views[prc.view]), false);
+		}
+
+		// Only process if published is true
+		if (isBoolean(prc.published) && prc.published) {
+			getOutfile(prc);
+
+			// Handle permalinks
+			if (len(prc.permalink)) {
+				prc.outFile = cwd & "_site" & prc.permalink;
+				var permArr = prc.permalink.listToArray("/");
+				var lastSeg = permArr.len() ? permArr[permArr.len()] : "";
+				var slug = lastSeg.listFirst(".");
+				var ext  = lastSeg.listRest(".");
+				prc.permalink = "/" & permArr.toList("/");
+				prc.fileExt   = len(ext) ? ext : "html";
+			} else {
+				getPermalink(prc);
+			}
+
+			// Set view to type if not already set
+			if (!prc.view.len() && prc.type.len()) {
+				prc.view = prc.type;
+			}
+
+			// Add processed template to collections
+			templates.append(prc);
+		}
+	}
+
+	/**
+	 * returns rendered html for a template and view
+	 *
+	 * @prc request context for the current page
+	 */
+	function renderTemplate( prc ){
+		var renderedHtml = "";
+		var template     = "";
+
+		try {
+			// template is CF markup
+			if ( prc.inFile.findNoCase( ".bxm" ) ) {
+				if ( process.hasIncludes && process.views.find( prc.view ) && prc.layout != "none" ) {
+					// render the cfml in the template first
+					template =  prc.inFile;
+
+					bx:savecontent variable="prc.content" {
+						include template;
+					}
+
+					// overlay the view
+					template = cwd & "_includes/" & prc.view & ".bxm";
+
+					bx:savecontent variable="renderedHtml" {
+						include template;
+					}
+				} else {
+					// view was not found, just render the template
+					template =  prc.inFile ;
+
+					bx:savecontent variable="renderedHtml" {
+						include template;
+					}
+				}
+			}
+
+			// template is markdown
+			if ( prc.inFile.findNoCase( ".md" ) ) {
+
+				if ( process.hasIncludes && process.views.find( prc.view ) ) {
+					template =  cwd & "_includes/" & prc.view & ".bxm";
+					bx:savecontent variable="renderedHtml" {
+						include template;
+					}
+				} else {
+					renderedHtml = prc.content;
+				}
+			}
+
+			// skip layout if "none" is specified
+			if (
+				prc.layout != "none" &&
+				process.hasIncludes &&
+				process.layouts.find( prc.layout )
+			) {
+				template =  cwd & "_includes/layouts/" & prc.layout & ".bxm";
+
+				bx:savecontent variable="renderedHtml" {
+					include template;
+				}
+			}
+
+		} catch ( any e ) {
+			dump(prc);
+			printLn( "Error rendering template: " & e.message );
+		}
+
+		// if ( isXML( trim( toString(renderedHtml) ) ) ) prc.fileExt = "xml";
+
+
+		return prc.fileExt == "html" ? htmlParse( renderedHtml ).html() : renderedHtml;
+	}
+
+
+}

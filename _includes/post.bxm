@@ -1,4 +1,4 @@
-<cfoutput>
+<bx:output>
 <div class="row">
 	<div class="col-lg-8 col-md-12">
 		<div class="card rf-card-bordered">
@@ -7,9 +7,9 @@
 					<div class="bg-dark w-75 opacity-75 p-2">
 						<p class="h2 text-white">#prc.title#</p>
 						<small class="d-block text-white py-1">#prc.description#</small>
-						<cfloop array="#prc.tags#" index="tag">
+						<bx:loop array="#prc.tags#" index="tag">
 							<span class="badge bg-light m-1 p-2 h5 text-dark">#tag#</span>
-						</cfloop>
+						</bx:loop>
 						<p class="text-white small text-uppercase">
 							#dateFormat(prc.date, "MMMM d, YYYY")# /
 							#prc.author#
@@ -30,12 +30,12 @@
 				<div class="my-3 text-white post decorate-links">
 					#prc.content#
 				</div>
-				<cfinclude template="giscus.cfm" />
+				<bx:include template="giscus.bxm" />
 			</div>
 		</div>
 	</div>
 	<div class="col-lg-4 d-none d-lg-block d-xl-block">
-		<cfinclude template="sidebar.cfm" />
+		<bx:include template="sidebar.bxm" />
 	</div>
 </div>
-</cfoutput>
+</bx:output>

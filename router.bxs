@@ -1,0 +1,7 @@
+// simple router
+try{
+	include cgi.path_info & ".html"
+}
+catch (e) {
+	include "404.html"
+}

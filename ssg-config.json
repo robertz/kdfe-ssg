@@ -2,7 +2,8 @@
 	"outputDir": "_site",
 	"passthru": [
 		"favicon.ico",
-		"assets"
+		"assets",
+		"router.bxs"
 	],
 	"ignore": [
 		"node_modules"

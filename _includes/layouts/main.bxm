@@ -1,4 +1,5 @@
 <!---
+image: ""
 site:
   title: KISDigital
   description: ColdFusion, ColdBox, CommandBox, BoxLang and other assorted musings
@@ -6,7 +7,7 @@ site:
   url: https://kisdigital.com
   image: https://static.kisdigital.com/kisdigital-logo.jpg
 --->
-<cfoutput>
+<bx:output>
 <!doctype html>
 <html lang="en">
 <head>
@@ -66,4 +67,4 @@ site:
 	<script data-goatcounter="https://kdfe-jasper.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
-</cfoutput>
+</bx:output>

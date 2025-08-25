@@ -1,0 +1,28 @@
+<!---
+site:
+  url: https://kisdigital.com
+layout: none
+permalink: /sitemap.xml
+excludeFromCollections: true
+--->
+<bx:script>
+	function getPages(collections){
+		var ret = collections.all.filter((item) => {
+			return item.excludeFromCollections == false && (item.type == "page" || item.type == "post");
+		});
+		ret.sort( ( e1, e2 ) => {
+			return compare( e2.permalink, e1.permalink );
+		} );
+		return ret;
+	}
+	bx:savecontent variable="xml" {
+	writeOutput('<?xml version="1.0" encoding="UTF-8"?>#char(10)#');
+	writeoutput('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">#char(10)#');
+	for(var p in getPages(collections)){
+
+			writeoutput('<url>#char(10)# <loc>#prc.site.url##p.permalink#</loc>#char(10)# <lastmod>#p.lastModified.listFirst("T")#</lastmod>#char(10)#</url>#char(10)#');
+	}
+	writeoutput('</urlset>#char(10)#');
+}
+</bx:script>
+<bx:output>#xml#</bx:output>

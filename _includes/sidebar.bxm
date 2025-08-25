@@ -1,4 +1,4 @@
-<cfoutput>
+<bx:output>
 <div>
 	<div class="card rf-card-bordered text-white">
 		<div class="card-body">
@@ -18,9 +18,9 @@
 				<span class="h6">Tags</span>
 			</div>
 			<div class="card-text">
-				<cfloop array="#collections.tags#" index="tag">
-					<a href="/tag/#generateSlug(tag)#"> <span class="h5"><span class="badge bg-info text-muted p-2 my-1">#tag#</span></span></a>
-				</cfloop>
+				<bx:loop array="#collections.tags#" index="tag">
+					<a href="/tag/#slugify(tag)#"> <span class="h5"><span class="badge bg-info text-muted p-2 my-1">#tag#</span></span></a>
+				</bx:loop>
 			</div>
 		</div>
 	</div>
@@ -30,9 +30,9 @@
 				<span class="h6">Recent Posts</span>
 			</div>
 			<div class="card-text">
-				<cfloop from="1" to="5" index="i">
+				<bx:loop from="1" to="5" index="i">
 					<a href="#collections.post[i].permalink#" class="post-link text-decoration-none">#collections.post[i].title#</a><br />
-				</cfloop>
+				</bx:loop>
 			</div>
 		</div>
 	</div>
@@ -43,12 +43,12 @@
 				<span class="h6">Projects</span>
 			</div>
 			<div class="card-text">
-				<cfloop from="1" to="#collections.project.len()#" index="i">
+				<bx:loop from="1" to="#collections.project.len()#" index="i">
 					<a href="#collections.project[i].permalink#" class="post-link text-decoration-none">#collections.project[i].title#</a><br />
-				</cfloop>
+				</bx:loop>
 			</div>
 		</div>
 	</div>
 
 </div>
-</cfoutput>
+</bx:output>
