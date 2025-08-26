@@ -19,10 +19,9 @@ excludeFromCollections: true
 	writeOutput('<?xml version="1.0" encoding="UTF-8"?>#char(10)#');
 	writeoutput('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">#char(10)#');
 	for(var p in getPages(collections)){
-
-			writeoutput('<url>#char(10)# <loc>#prc.site.url##p.permalink#</loc>#char(10)# <lastmod>#p.lastModified.listFirst("T")#</lastmod>#char(10)#</url>#char(10)#');
+		writeoutput('<url>#char(10)# <loc>#prc.site.url##p.permalink#</loc>#char(10)# <lastmod>#p.lastModified.listFirst("T")#</lastmod>#char(10)#</url>#char(10)#');
 	}
 	writeoutput('</urlset>#char(10)#');
 }
 </bx:script>
-<bx:output>#xml#</bx:output>
+<bx:output>#trim(xml)#</bx:output>
