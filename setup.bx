@@ -1,0 +1,98 @@
+class {
+	// Project root directory
+	variables.cwd = expandPath(".") & "/";
+	// List of required modules
+	variables.required = [];
+
+	/**
+	 * Reads the requirements.txt file and returns a list of required modules
+	 */
+	function readRequirements() {
+		try {
+			var filePath = variables.cwd & "requirements.txt";
+			var content = fileRead(filePath);
+			return content
+				.listToArray(char(10))
+				// Strip inline comments and blanks
+				.map(line => line.listFirst("##").trim())
+				.filter(line => line.trim() != "")
+				.map(line => {
+					return {
+						name: line.listFirst("@").trim(),
+						version: line.listRest("@").len() ? line.listRest("@").trim() : "any"
+					};
+				});
+		} catch (any e) {
+			printLn("Error reading requirements: " & e.message);
+			cliExit(1);
+		}
+	}
+
+	/**
+	 * Checks for missing modules and installs them if needed
+	 */
+	function checkAndInstallModules() {
+		// Get list of installed modules
+		var installedRaw = "";
+		bx:execute variable="installedRaw" name="install-bx-module" arguments="--list";
+		var installedModules = installedRaw.listToArray(char(10)).filter(line => line.trim() != "");
+
+		// Build an index of installed modules: name -> version
+		var installedIndex = {};
+		installedModules.each(line => {
+			line = line.trim();
+			// Expect lines like: "✓ bx-jsoup (1.0.0+1)"; skip headers/others
+			var hasCheck = line.find("✓") > 0;
+			var hasParen = line.find("(") > 0 && line.find(")") > 0;
+			if (!hasCheck || !hasParen) return;
+
+			var before = line.listFirst("(");
+			var name = before.listLast(" ").trim();
+			var version = line.listRest("(").listFirst(")").trim();
+			if (name.len() && version.len()) {
+				installedIndex[name] = version;
+			}
+		});
+
+		var missing = [];
+		// Check each required module against the index
+		variables.required.each(module => {
+			var name = module.name;
+			var requiredAny = module.version == "any";
+			var requiredPrefix = requiredAny ? "" : module.version.listFirst("+");
+
+			var isInstalled = structKeyExists(installedIndex, name);
+			if (isInstalled) {
+				if (!requiredAny) {
+					var installedVersion = installedIndex[name];
+					var installedPrefix = installedVersion.listFirst("+");
+					if (installedPrefix != requiredPrefix) {
+						missing.push(name & "@" & requiredPrefix);
+					}
+				}
+			} else {
+				missing.push(requiredAny ? name : name & "@" & requiredPrefix);
+			}
+		});
+
+		// Install missing modules if any
+		if (missing.len()) {
+			var modulesList = missing.toList(" ");
+			printLn("Installing missing required modules: " & modulesList);
+			bx:execute variable="installedRaw" name="install-bx-module" arguments=modulesList;
+		} else {
+			printLn("All required modules are already installed.");
+		}
+	}
+
+	/**
+	 * Main entry point
+	 */
+	function main(args = []) {
+		variables.required = readRequirements();
+
+		printLn("Checking for required modules...");
+		checkAndInstallModules();
+		cliExit(0);
+	}
+}
