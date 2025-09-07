@@ -1,0 +1,15 @@
+<!---
+layout: main
+view: paginated-list
+title: Blog
+permalink: /blog/page/{{page}}/index.html
+pagination:
+  data: collections.post
+  size: 5
+  alias: posts
+published: false
+--->
+<bx:output>
+  <p>This is a disabled example page that demonstrates paginating posts with a page size of 5. To use it, move this file to your content area, set <code>published: true</code>, and adjust the permalink as needed.</p>
+</bx:output>
+

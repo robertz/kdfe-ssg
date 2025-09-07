@@ -1,0 +1,21 @@
+<!---
+layout: main
+view: page
+permalink: /index/{{page}}/
+pagination:
+  data: collections.post
+  size: 8
+--->
+<bx:output>
+	<bx:loop array="#prc.pagedData#" index="i">
+		<p>#i.permalink#</p>
+	</bx:loop>
+
+	<bx:if prc.paginationInfo.href.previous.len()>
+		<a href="#prc.paginationInfo.href.previous#" class="pagination-previous">Previous</a>
+	</bx:if>
+	<bx:if prc.paginationInfo.href.next.len()>
+		<a href="#prc.paginationInfo.href.next#" class="pagination-next">Next</a>
+	</bx:if>
+
+</bx:output>
