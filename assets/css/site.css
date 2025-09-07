@@ -66,4 +66,35 @@ blockquote {
 	--post-anchor-visited: #808080;
 	--post-link-text: #4FBCFF;
 	--bs-code-color: #ffc0cb;
+	/* Badge palette */
+	--badge-info-bg: #3ac4ff;       /* brighter cyan for dark theme */
+	--badge-info-text: #0e0e0e;     /* near-black for contrast */
+	--badge-info-border: #2aa6da;   /* slightly darker border */
+}
+
+/* Sidebar list-group separators use the light border color */
+aside .list-group {
+	--bs-list-group-border-color: var(--light-border-color);
+}
+aside .list-group-item {
+	border-color: var(--light-border-color);
+}
+
+/* Badges: consistent shape, weight, and hover affordance */
+.badge {
+	border-radius: 10rem;
+	font-weight: 600;
+	letter-spacing: .02em;
+	border: 1px solid transparent;
+}
+.badge.bg-info,
+.badge.text-bg-info { /* BS5 variations */
+	background-color: var(--badge-info-bg) !important;
+	color: var(--badge-info-text) !important;
+	border-color: var(--badge-info-border);
+}
+.badge.bg-info:hover,
+.badge.text-bg-info:hover {
+	filter: brightness(1.05);
+	box-shadow: 0 0 0 2px rgba(58,196,255,.15);
 }

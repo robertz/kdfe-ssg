@@ -45,7 +45,7 @@ pagination:
 		<ul class="pagination justify-content-center">
 			<!-- Previous -->
 			<li class="page-item #prc.paginationInfo.href.previous.len() ? '' : 'disabled'#">
-				<a class="page-link" href="#prc.paginationInfo.href.previous.len() ? prc.paginationInfo.href.previous : '##'#" tabindex="#prc.paginationInfo.href.previous.len() ? '0' : '-1'#" aria-label="Previous" aria-disabled="#prc.paginationInfo.href.previous.len() ? 'false' : 'true'#">
+				<a class="page-link bg-dark text-light border-secondary" href="#prc.paginationInfo.href.previous.len() ? prc.paginationInfo.href.previous : '##'#" tabindex="#prc.paginationInfo.href.previous.len() ? '0' : '-1'#" aria-label="Previous" aria-disabled="#prc.paginationInfo.href.previous.len() ? 'false' : 'true'#">
 					<span aria-hidden="true">&laquo;</span>
 					<span class="visually-hidden">Previous</span>
 				</a>
@@ -53,12 +53,12 @@ pagination:
 			<!-- Numbered pages -->
 			<bx:loop array="#prc.paginationInfo.pages#" index="p">
 				<li class="page-item #p.current ? 'active' : ''#">
-					<a class="page-link" href="#p.href#">#p.number#</a>
+					<a class="page-link #p.current ? 'bg-info text-dark border-secondary' : 'bg-dark text-light border-secondary'#" href="#p.href#">#p.number#</a>
 				</li>
 			</bx:loop>
 			<!-- Next -->
 			<li class="page-item #prc.paginationInfo.href.next.len() ? '' : 'disabled'#">
-				<a class="page-link" href="#prc.paginationInfo.href.next.len() ? prc.paginationInfo.href.next : '##'#" tabindex="#prc.paginationInfo.href.next.len() ? '0' : '-1'#" aria-label="Next" aria-disabled="#prc.paginationInfo.href.next.len() ? 'false' : 'true'#">
+				<a class="page-link bg-dark text-light border-secondary" href="#prc.paginationInfo.href.next.len() ? prc.paginationInfo.href.next : '##'#" tabindex="#prc.paginationInfo.href.next.len() ? '0' : '-1'#" aria-label="Next" aria-disabled="#prc.paginationInfo.href.next.len() ? 'false' : 'true'#">
 					<span aria-hidden="true">&raquo;</span>
 					<span class="visually-hidden">Next</span>
 				</a>
