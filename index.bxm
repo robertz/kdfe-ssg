@@ -1,57 +1,69 @@
 <!---
 layout: main
 view: page
+permalink: /{{page}}/
+pagination:
+  data: collections.post
+  size: 9
 --->
 <bx:output>
-<div class="row mb-5">
-	<bx:loop from="1" to="#collections.post.len() gt 3 ? 3 : collections.post.len()#" index="i">
-		<bx:if i eq 1>
-			<div class="col-12 p-1">
-				<a href="#collections.post[i].permalink#" class="text-decoration-none">
-					<div style="background: url(#collections.post[i].image#) no-repeat center center; background-size: cover; height: 500px;">
-						<div class="bg-dark w-75 opacity-75 p-2">
-							<p class="h2 text-white">#collections.post[i].title#</p>
-							<small class="d-block text-white py-1">#collections.post[i].description#</small>
-							<bx:loop array="#collections.post[i].tags#" index="tag">
-								<span class="badge bg-light m-1 p-2 h5 text-dark">#tag#</span>
-							</bx:loop>
-							<p class="text-white small text-uppercase">
-								#dateFormat(collections.post[i].date, "MMMM d, YYYY")# /
-								#collections.post[i].author#
-							</p>
-						</div>
-					</div>
+
+	<!-- Latest posts grid -->
+	<section aria-labelledby="latest-posts">
+		<h1 id="latest-posts" class="h3 mb-3">Latest Posts</h1>
+		<div class="row g-3">
+			<bx:loop array="#prc.pagedData#" index="item">
+				<div class="col-12 col-md-6 col-lg-4">
+					<article class="card h-100 bg-transparent border-secondary">
+						<a href="#item.permalink#" class="text-decoration-none">
+							<bx:if len(item.image ?: '')>
+								<img src="#item.image#" alt="#(item.title ?: '')#" class="card-img-top" loading="lazy" style="height: 220px; width: 100%; object-fit: cover;" />
+							<bx:else>
+								<div class="card-img-top bg-secondary" style="height: 220px; width: 100%;"></div>
+							</bx:if>
+							<div class="card-body">
+								<h2 class="h5 card-title text-white mb-1">#(item.title ?: 'Untitled')#</h2>
+								<p class="post-link small mb-2">#dateTimeFormat(item.date ?: now(), 'MMM d, yyyy')#</p>
+								<p class="card-text text-white">#(item.description ?: '')#</p>
+								<bx:if isArray(item.tags ?: []) AND (item.tags.len())>
+									<div class="mt-2">
+										<bx:loop array="#item.tags#" index="tag">
+											<span class="badge bg-info text-dark me-1 mb-1">#tag#</span>
+										</bx:loop>
+									</div>
+								</bx:if>
+							</div>
+						</a>
+					</article>
+				</div>
+			</bx:loop>
+		</div>
+	</section>
+
+	<!-- Bootstrap pagination: numbers + previous/next -->
+	<nav aria-label="Pagination" class="mt-4">
+		<ul class="pagination justify-content-center">
+			<!-- Previous -->
+			<li class="page-item #prc.paginationInfo.href.previous.len() ? '' : 'disabled'#">
+				<a class="page-link" href="#prc.paginationInfo.href.previous.len() ? prc.paginationInfo.href.previous : '##'#" tabindex="#prc.paginationInfo.href.previous.len() ? '0' : '-1'#" aria-label="Previous" aria-disabled="#prc.paginationInfo.href.previous.len() ? 'false' : 'true'#">
+					<span aria-hidden="true">&laquo;</span>
+					<span class="visually-hidden">Previous</span>
 				</a>
-			</div>
-		</bx:if>
-		<bx:if i eq 2>
-			<div class="col-6 p-1">
-				<a href="#collections.post[i].permalink#" class="text-decoration-none">
-					<div style="background: url(#collections.post[i].image#) no-repeat center center; background-size: cover; height: 275px;"></div>
-					<div>
-						<p class="h4 text-white" style="height: 75px;">#collections.post[i].title#</p>
-						<small class="d-block text-white py-1">#collections.post[i].description#</small>
-					</div>
+			</li>
+			<!-- Numbered pages -->
+			<bx:loop array="#prc.paginationInfo.pages#" index="p">
+				<li class="page-item #p.current ? 'active' : ''#">
+					<a class="page-link" href="#p.href#">#p.number#</a>
+				</li>
+			</bx:loop>
+			<!-- Next -->
+			<li class="page-item #prc.paginationInfo.href.next.len() ? '' : 'disabled'#">
+				<a class="page-link" href="#prc.paginationInfo.href.next.len() ? prc.paginationInfo.href.next : '##'#" tabindex="#prc.paginationInfo.href.next.len() ? '0' : '-1'#" aria-label="Next" aria-disabled="#prc.paginationInfo.href.next.len() ? 'false' : 'true'#">
+					<span aria-hidden="true">&raquo;</span>
+					<span class="visually-hidden">Next</span>
 				</a>
-			</div>
-		</bx:if>
-		<bx:if i eq 3>
-			<div class="col-6 p-1">
-				<a href="#collections.post[i].permalink#" class="text-decoration-none">
-					<div style="background: url(#collections.post[i].image#) no-repeat center center; background-size: cover; height: 275px;"></div>
-					<div>
-						<p class="h4 text-white" style="height: 75px;">#collections.post[i].title#</p>
-						<small class="d-block text-white py-1">#collections.post[i].description#</small>
-					</div>
-				</a>
-			</div>
-		</bx:if>
-	</bx:loop>
-</div>
-<bx:if collections.post.len() gt 3>
-	<div class="h4">Older Posts</div>
-	<bx:loop from="4" to="#collections.post.len()#" index="i">
-		<p><a href="#collections.post[i].permalink#" class="post-link">#collections.post[i].title#</a></p>
-	</bx:loop>
-</bx:if>
+			</li>
+		</ul>
+	</nav>
+
 </bx:output>
