@@ -14,23 +14,12 @@ body {
 	color: var(--post-link-text);
 }
 
-.rf-card-bordered {
-	border-radius: 4px;
-	border: 1px solid var(--main-border-color);
-	background: rgb(26,26,27);
-}
-
 a.site-link {
 	text-decoration: none;
 	color: white;
 	font-size: 1.5em;
 	font-weight: bold;
 	vertical-align: middle;
-}
-
-.footer {
-	background: rgba(0,0,0,0.1);
-	color: #fff;
 }
 
 .post img {

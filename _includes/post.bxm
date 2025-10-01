@@ -4,7 +4,7 @@
 		<article class="overflow-hidden rounded-2xl border border-gray-700/80 bg-neutral-900/70 shadow-sm">
 			<div class="relative h-80">
 				<div class="absolute inset-0 bg-cover bg-center" style="background-image: url(#prc.image#);"></div>
-				<div class="absolute inset-0 bg-black/60"></div>
+				<div class="absolute inset-0 bg-black/40"></div>
 				<div class="relative z-10 flex h-full flex-col justify-end gap-3 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 sm:p-8">
 					<p class="text-3xl font-semibold text-white">#prc.title#</p>
 					<p class="text-sm text-gray-200">#prc.description#</p>
