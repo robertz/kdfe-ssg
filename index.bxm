@@ -4,66 +4,111 @@ view: page
 permalink: /{{page}}/
 pagination:
   data: collections.post
-  size: 9
+  size: 6
 --->
 <bx:output>
 
-	<!-- Latest posts grid -->
+	<!-- Latest posts feed -->
 	<section aria-labelledby="latest-posts">
-		<h1 id="latest-posts" class="h3 mb-3">Latest Posts</h1>
-		<div class="row g-3">
+		<h1 id="latest-posts" class="mb-6 text-2xl font-semibold">Latest Posts</h1>
+		<div class="space-y-8">
 			<bx:loop array="#prc.pagedData#" index="item">
-				<div class="col-12 col-md-6 col-lg-4">
-					<article class="card h-100 bg-transparent border-secondary">
-						<a href="#item.permalink#" class="text-decoration-none">
+				<article class="group overflow-hidden rounded-3xl border border-gray-700/80 bg-neutral-900/70 shadow-sm transition hover:-translate-y-1 hover:border-brand/70">
+					<a href="#item.permalink#" class="block focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-900 no-underline">
+						<div class="relative h-64 overflow-hidden sm:h-72">
 							<bx:if len(item.image ?: '')>
-								<img src="#item.image#" alt="#(item.title ?: '')#" class="card-img-top" loading="lazy" style="height: 220px; width: 100%; object-fit: cover;" />
+								<img src="#item.image#" alt="#(item.title ?: '')#" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy" />
 							<bx:else>
-								<div class="card-img-top bg-secondary" style="height: 220px; width: 100%;"></div>
+								<div class="h-full w-full bg-gradient-to-br from-gray-800 via-gray-900 to-black"></div>
 							</bx:if>
-							<div class="card-body">
-								<h2 class="h5 card-title text-white mb-1">#(item.title ?: 'Untitled')#</h2>
-								<p class="post-link small mb-2">#dateTimeFormat(item.date ?: now(), 'MMM d, yyyy')#</p>
-								<p class="card-text text-white">#(item.description ?: '')#</p>
-								<bx:if isArray(item.tags ?: []) AND (item.tags.len())>
-									<div class="mt-2">
-										<bx:loop array="#item.tags#" index="tag">
-											<span class="badge bg-info text-dark me-1 mb-1">#tag#</span>
-										</bx:loop>
-									</div>
-								</bx:if>
-							</div>
-						</a>
-					</article>
-				</div>
+							<div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+						</div>
+						<div class="space-y-4 p-6 sm:p-8">
+							<p class="post-link text-xs font-semibold uppercase tracking-[0.2em]">#dateTimeFormat(item.date ?: now(), 'MMM d, yyyy')#</p>
+							<h2 class="text-2xl font-semibold text-white transition group-hover:text-brand">#(item.title ?: 'Untitled')#</h2>
+							<p class="text-sm text-gray-200 sm:text-base">#(item.description ?: '')#</p>
+							<bx:if isArray(item.tags ?: []) AND (item.tags.len())>
+								<div class="flex flex-wrap gap-2 pt-2">
+									<bx:loop array="#item.tags#" index="tag">
+										<span class="inline-flex items-center rounded-full bg-brand/20 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand ring-1 ring-inset ring-brand/30">#tag#</span>
+									</bx:loop>
+								</div>
+							</bx:if>
+						</div>
+					</a>
+				</article>
 			</bx:loop>
 		</div>
 	</section>
 
-	<!-- Bootstrap pagination: numbers + previous/next -->
-	<nav aria-label="Pagination" class="mt-4">
-		<ul class="pagination justify-content-center">
-			<!-- Previous -->
-			<li class="page-item #prc.paginationInfo.href.previous.len() ? '' : 'disabled'#">
-				<a class="page-link bg-dark text-light border-secondary" href="#prc.paginationInfo.href.previous.len() ? prc.paginationInfo.href.previous : '##'#" tabindex="#prc.paginationInfo.href.previous.len() ? '0' : '-1'#" aria-label="Previous" aria-disabled="#prc.paginationInfo.href.previous.len() ? 'false' : 'true'#">
-					<span aria-hidden="true">&laquo;</span>
-					<span class="visually-hidden">Previous</span>
+	<bx:script>
+		var pages = prc.paginationInfo.pages ?: [];
+		var totalPages = pages.len();
+		var visiblePages = pages;
+		var useCondensed = false;
+		var currentIndex = 1;
+		var firstHref = '';
+		var lastHref = '';
+		if ( totalPages ) {
+			firstHref = pages[1].href;
+			lastHref = pages[ totalPages ].href;
+			for ( var i = 1; i <= totalPages; i++ ) {
+				if ( pages[i].current ) {
+					currentIndex = i;
+					break;
+				}
+			}
+		}
+		var onFirstPage = ( currentIndex == 1 );
+		var onLastPage = ( currentIndex == totalPages );
+		if ( totalPages > 8 ) {
+			useCondensed = true;
+			visiblePages = [];
+			var pageCount = 6;
+			var startIndex = currentIndex - 2;
+			if ( startIndex < 1 ) startIndex = 1;
+			var endIndex = startIndex + pageCount - 1;
+			if ( endIndex > totalPages ) {
+				endIndex = totalPages;
+				startIndex = endIndex - pageCount + 1;
+			}
+			if ( startIndex < 1 ) startIndex = 1;
+			for ( var i = startIndex; i <= endIndex; i++ ) {
+				arrayAppend( visiblePages, pages[i] );
+			}
+		}
+	</bx:script>
+
+	<nav aria-label="Pagination" class="mt-12">
+		<div class="flex flex-wrap items-center justify-center gap-3">
+			<bx:if useCondensed>
+				<a class="inline-flex min-h-[2.75rem] min-w-[2.75rem] items-center justify-center rounded-xl border border-gray-700/80 bg-neutral-900/70 px-4 text-sm font-semibold text-gray-300 shadow-sm transition hover:-translate-y-0.5 hover:border-brand/70 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-900 no-underline #onFirstPage ? 'pointer-events-none opacity-40' : ''#" href="#onFirstPage ? '##' : firstHref#" tabindex="#onFirstPage ? '-1' : '0'#" aria-label="Go to beginning" aria-disabled="#onFirstPage ? 'true' : 'false'#">
+					<span aria-hidden="true" class="text-lg">&laquo;</span>
+					<span class="sr-only">Go to beginning</span>
 				</a>
-			</li>
-			<!-- Numbered pages -->
-			<bx:loop array="#prc.paginationInfo.pages#" index="p">
-				<li class="page-item #p.current ? 'active' : ''#">
-					<a class="page-link #p.current ? 'bg-info text-dark border-secondary' : 'bg-dark text-light border-secondary'#" href="#p.href#">#p.number#</a>
-				</li>
+			<bx:else>
+				<a class="inline-flex min-h-[2.75rem] min-w-[2.75rem] items-center justify-center rounded-xl border border-gray-700/80 bg-neutral-900/70 px-4 text-sm font-semibold text-gray-300 shadow-sm transition hover:-translate-y-0.5 hover:border-brand/70 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-900 no-underline #prc.paginationInfo.href.previous.len() ? '' : 'pointer-events-none opacity-40'#" href="#prc.paginationInfo.href.previous.len() ? prc.paginationInfo.href.previous : '##'#" tabindex="#prc.paginationInfo.href.previous.len() ? '0' : '-1'#" aria-label="Previous" aria-disabled="#prc.paginationInfo.href.previous.len() ? 'false' : 'true'#">
+					<span aria-hidden="true" class="text-lg">&larr;</span>
+					<span class="sr-only">Previous</span>
+				</a>
+			</bx:if>
+
+			<bx:loop array="#visiblePages#" index="p">
+				<a class="inline-flex min-h-[2.75rem] min-w-[2.75rem] items-center justify-center rounded-xl border px-4 text-sm font-semibold no-underline transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-900 #p.current ? 'border-brand/70 bg-brand/20 text-white shadow-sm ring-1 ring-brand/40' : 'border-gray-700/80 bg-neutral-900/70 text-gray-300 shadow-sm hover:-translate-y-0.5 hover:border-brand/70 hover:text-white'#" href="#p.href#">#p.number#</a>
 			</bx:loop>
-			<!-- Next -->
-			<li class="page-item #prc.paginationInfo.href.next.len() ? '' : 'disabled'#">
-				<a class="page-link bg-dark text-light border-secondary" href="#prc.paginationInfo.href.next.len() ? prc.paginationInfo.href.next : '##'#" tabindex="#prc.paginationInfo.href.next.len() ? '0' : '-1'#" aria-label="Next" aria-disabled="#prc.paginationInfo.href.next.len() ? 'false' : 'true'#">
-					<span aria-hidden="true">&raquo;</span>
-					<span class="visually-hidden">Next</span>
+
+			<bx:if useCondensed>
+				<a class="inline-flex min-h-[2.75rem] min-w-[2.75rem] items-center justify-center rounded-xl border border-gray-700/80 bg-neutral-900/70 px-4 text-sm font-semibold text-gray-300 shadow-sm transition hover:-translate-y-0.5 hover:border-brand/70 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-900 no-underline #onLastPage ? 'pointer-events-none opacity-40' : ''#" href="#onLastPage ? '##' : lastHref#" tabindex="#onLastPage ? '-1' : '0'#" aria-label="Go to end" aria-disabled="#onLastPage ? 'true' : 'false'#">
+					<span aria-hidden="true" class="text-lg">&raquo;</span>
+					<span class="sr-only">Go to end</span>
 				</a>
-			</li>
-		</ul>
+			<bx:else>
+				<a class="inline-flex min-h-[2.75rem] min-w-[2.75rem] items-center justify-center rounded-xl border border-gray-700/80 bg-neutral-900/70 px-4 text-sm font-semibold text-gray-300 shadow-sm transition hover:-translate-y-0.5 hover:border-brand/70 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-900 no-underline #prc.paginationInfo.href.next.len() ? '' : 'pointer-events-none opacity-40'#" href="#prc.paginationInfo.href.next.len() ? prc.paginationInfo.href.next : '##'#" tabindex="#prc.paginationInfo.href.next.len() ? '0' : '-1'#" aria-label="Next" aria-disabled="#prc.paginationInfo.href.next.len() ? 'false' : 'true'#">
+					<span aria-hidden="true" class="text-lg">&rarr;</span>
+					<span class="sr-only">Next</span>
+				</a>
+			</bx:if>
+		</div>
 	</nav>
 
 </bx:output>

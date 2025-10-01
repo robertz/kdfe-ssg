@@ -1,61 +1,54 @@
 <bx:output>
-<aside aria-labelledby="sidebar-heading">
+<aside aria-labelledby="sidebar-heading" class="space-y-4">
+  <h2 id="sidebar-heading" class="sr-only">Site Sidebar</h2>
   <!-- Brand / About -->
-  <section class="card rf-card-bordered text-white" aria-labelledby="about-title">
-    <div class="card-body">
-      <h2 id="about-title" class="h6 card-title mb-2">
-        <span style="color: var(--post-link-text)">KIS</span>Digital
-      </h2>
-      <p class="card-text mb-0 small">ColdFusion, ColdBox, CommandBox, BoxLang and assorted musings.</p>
-    </div>
+  <section class="rounded-2xl border border-gray-700/80 bg-neutral-900/70 p-5 shadow-sm" aria-labelledby="about-title">
+    <h2 id="about-title" class="text-sm font-semibold uppercase tracking-wide text-gray-300">
+      <span style="color: var(--post-link-text)">KIS</span>Digital
+    </h2>
+    <p class="mt-2 text-sm text-gray-300">ColdFusion, ColdBox, CommandBox, BoxLang and assorted musings.</p>
   </section>
 
   <!-- Tags -->
   <bx:if isArray(collections.tags ?: []) AND collections.tags.len()>
-    <section class="card rf-card-bordered text-white mt-3" aria-labelledby="tags-title">
-      <div class="card-body">
-        <h2 id="tags-title" class="h6 card-title mb-2">Tags</h2>
-        <div class="card-text">
-          <bx:loop array="#collections.tags#" index="tag">
-            <a href="/tag/#slugify(tag)#" class="text-decoration-none" aria-label="Tag #tag#">
-              <span class="badge bg-info text-dark me-1 mb-1">#tag#</span>
-            </a>
-          </bx:loop>
-        </div>
+    <section class="rounded-2xl border border-gray-700/80 bg-neutral-900/70 p-5 shadow-sm" aria-labelledby="tags-title">
+      <h2 id="tags-title" class="text-sm font-semibold uppercase tracking-wide text-gray-300">Tags</h2>
+      <div class="mt-3 flex flex-wrap gap-2">
+        <bx:loop array="#collections.tags#" index="tag">
+          <a href="/tag/#slugify(tag)#" class="inline-flex items-center rounded-full bg-brand/20 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand ring-1 ring-inset ring-brand/30 transition hover:ring-brand/50" aria-label="Tag #tag#">
+            #tag#
+          </a>
+        </bx:loop>
       </div>
     </section>
   </bx:if>
 
   <!-- Recent posts (max 5) -->
   <bx:if isArray(collections.post ?: []) AND collections.post.len()>
-    <section class="card rf-card-bordered text-white mt-3" aria-labelledby="recent-title">
-      <div class="card-body">
-        <h2 id="recent-title" class="h6 card-title mb-2">Recent Posts</h2>
-        <ul class="list-group list-group-flush">
-          <bx:loop from="1" to="#min(5, collections.post.len())#" index="i">
-            <li class="list-group-item bg-transparent text-white p-2">
-              <a href="#collections.post[i].permalink#" class="post-link text-decoration-none">#collections.post[i].title#</a>
-              <div class="small text-white">#dateTimeFormat(collections.post[i].date ?: now(), 'MMM d, yyyy')#</div>
-            </li>
-          </bx:loop>
-        </ul>
-      </div>
+    <section class="rounded-2xl border border-gray-700/80 bg-neutral-900/70 p-5 shadow-sm" aria-labelledby="recent-title">
+      <h2 id="recent-title" class="text-sm font-semibold uppercase tracking-wide text-gray-300">Recent Posts</h2>
+      <ul class="mt-3 divide-y divide-gray-700/60">
+        <bx:loop from="1" to="#min(5, collections.post.len())#" index="i">
+          <li class="py-3 first:pt-0 last:pb-0">
+            <a href="#collections.post[i].permalink#" class="post-link text-sm font-semibold">#collections.post[i].title#</a>
+            <div class="mt-1 text-xs uppercase tracking-wide text-gray-400">#dateTimeFormat(collections.post[i].date ?: now(), 'MMM d, yyyy')#</div>
+          </li>
+        </bx:loop>
+      </ul>
     </section>
   </bx:if>
 
   <!-- Projects -->
   <bx:if isArray(collections.project ?: []) AND collections.project.len()>
-    <section class="card rf-card-bordered text-white mt-3" aria-labelledby="projects-title">
-      <div class="card-body">
-        <h2 id="projects-title" class="h6 card-title mb-2">Projects</h2>
-        <ul class="list-group list-group-flush">
-          <bx:loop from="1" to="#collections.project.len()#" index="i">
-            <li class="list-group-item bg-transparent text-white p-2">
-              <a href="#collections.project[i].permalink#" class="post-link text-decoration-none">#collections.project[i].title#</a>
-            </li>
-          </bx:loop>
-        </ul>
-      </div>
+    <section class="rounded-2xl border border-gray-700/80 bg-neutral-900/70 p-5 shadow-sm" aria-labelledby="projects-title">
+      <h2 id="projects-title" class="text-sm font-semibold uppercase tracking-wide text-gray-300">Projects</h2>
+      <ul class="mt-3 space-y-2">
+        <bx:loop from="1" to="#collections.project.len()#" index="i">
+          <li>
+            <a href="#collections.project[i].permalink#" class="post-link text-sm font-semibold">#collections.project[i].title#</a>
+          </li>
+        </bx:loop>
+      </ul>
     </section>
   </bx:if>
 

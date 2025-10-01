@@ -1,15 +1,13 @@
 <bx:output>
-<div class="row">
-	<div class="col-lg-8 col-md-12">
-		<div class="card rf-card-bordered text-white">
-			<div class="card-body">
-				<div class="card-text">
-					#prc.content#
-				</div>
+<div class="grid gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+	<div>
+		<article class="overflow-hidden rounded-2xl border border-gray-700/80 bg-neutral-900/70 shadow-sm">
+			<div class="prose prose-invert max-w-none p-6 sm:p-8">
+				#prc.content#
 			</div>
-		</div>
+		</article>
 	</div>
-	<div class="col-lg-4 d-none d-lg-block d-xl-block">
+	<div class="hidden space-y-4 lg:block">
 		<bx:include template="sidebar.bxm" />
 	</div>
 </div>

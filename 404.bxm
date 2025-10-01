@@ -6,8 +6,8 @@ excludeFromCollections: true
 --->
 <bx:output>
 <div class="text-center">
-	<div class="h2 text-white">404 Error</div>
-	<img src="/assets/images/the-dude-abides.gif" class="w-50 mx-auto my-5 rounded" />
-	<div class="h4 text-white">That page doesn't exist, man...</div>
+	<div class="text-3xl font-semibold text-white">404 Error</div>
+	<img src="/assets/images/the-dude-abides.gif" class="mx-auto my-10 w-1/2 max-w-md rounded-2xl" />
+	<div class="text-xl text-white">That page doesn't exist, man...</div>
 </div>
 </bx:output>

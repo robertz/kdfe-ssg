@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+body {
+	background-color: #000;
+	font-family: Noto Sans, Arial, sans-serif;
+	font-size: 1em;
+}
+
+.ts-display {
+	cursor: help;
+}
+
+.post-link, .post-link:hover {
+	color: var(--post-link-text);
+}
+
+.rf-card-bordered {
+	border-radius: 4px;
+	border: 1px solid var(--main-border-color);
+	background: rgb(26,26,27);
+}
+
+a.site-link {
+	text-decoration: none;
+	color: white;
+	font-size: 1.5em;
+	font-weight: bold;
+	vertical-align: middle;
+}
+
+.footer {
+	background: rgba(0,0,0,0.1);
+	color: #fff;
+}
+
+.post img {
+	width: 100%;
+	max-width: 100%;
+	height: auto;
+	border-radius:1em;
+}
+
+blockquote {
+	border-left: 4px solid #4fbcff;
+	padding: 1em 1em 0.1em 2em;
+	background: #272b33;
+}
+
+:root {
+	--main-padding: 5px 8px 10px;
+	--main-background-color: #1a1a1b;
+	--main-border-color: #424242;
+	--light-border-color: #555555;
+	--post-anchor: rgb(215, 218, 220);
+	--post-anchor-visited: #808080;
+	--post-link-text: #4FBCFF;
+	--bs-code-color: #ffc0cb;
+	/* Badge palette */
+	--badge-info-bg: #3ac4ff;       /* brighter cyan for dark theme */
+	--badge-info-text: #0e0e0e;     /* near-black for contrast */
+	--badge-info-border: #2aa6da;   /* slightly darker border */
+}

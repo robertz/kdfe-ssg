@@ -7,8 +7,12 @@ pagination:
   data: collections.tags
 --->
 <bx:output>
-	<h4>Posts tagged as #prc.tag#</h4>
-	<bx:loop array="#collections.byTag[slugify(prc.tag)]#" index="i">
-		<p><a href="#i.permalink#" class="post-link text-decoration-none">#i.title#</a></p>
-	</bx:loop>
+	<h1 class="text-2xl font-semibold">Posts tagged as #prc.tag#</h1>
+	<ul class="mt-4 space-y-2">
+		<bx:loop array="#collections.byTag[slugify(prc.tag)]#" index="i">
+			<li>
+				<a href="#i.permalink#" class="post-link text-lg font-semibold hover:underline">#i.title#</a>
+			</li>
+		</bx:loop>
+	</ul>
 </bx:output>

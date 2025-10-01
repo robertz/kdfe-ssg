@@ -6,6 +6,7 @@
 		"router.bxs"
 	],
 	"ignore": [
-		"node_modules"
+		"node_modules",
+		"_src"
 	]
 }
