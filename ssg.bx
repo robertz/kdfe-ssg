@@ -133,21 +133,18 @@ class {
 		var dataDir = cwd & "_data";
 		if ( !directoryExists( dataDir ) ) return;
 		var jsonFiles = directoryList(dataDir, true, "path", (any path) => path.findNoCase(".json"));
-
 		jsonFiles.each((dataFile) => {
 			// Get file name without extension
 			var fileStem = getFileFromPath(dataFile).listFirst(".");
 			// Get relative path parts as array
 			var relPath = getDirectoryFromPath(dataFile).replace(dataDir, "");
 			var pathParts = relPath.len() ? relPath.listToArray("/") : [];
-
 			// Walk or create nested structure in collections.global
 			var target = collections.global;
 			for (var part in pathParts) {
 				if (!target.keyExists(part)) target[part] = {};
 				target = target[part];
 			}
-
 			// Deserialize JSON and assign to correct location
 			target[fileStem] = jsonDeserialize(fileRead(dataFile, "utf-8"));
 		});
@@ -160,7 +157,6 @@ class {
 		// build arrays of valid layouts/views
 		var layoutsDir = cwd & "_includes/layouts";
 		var includesDir = cwd & "_includes";
-
 		var layouts = directoryExists(layoutsDir) ? directoryList(layoutsDir, false, "path", "*.bxm") : [];
 		layouts.each((layout) => {
 			var stem = listFirst(getFileFromPath(layout), ".");
@@ -232,7 +228,6 @@ class {
 		var sitePrefix = cwd & config.outputDir & "/";
 		var relPath = prc.outFile.replace(sitePrefix, "");
 		var pathParts = relPath.listToArray("/");
-
 		// Handle last part: remove .html extension and "index" filename
 		var lastIdx = pathParts.len();
 		var addTrailingSlash = false;
@@ -242,10 +237,8 @@ class {
 			if (lastPart == "index") { lastPart = ""; addTrailingSlash = true; }
 			pathParts[lastIdx] = lastPart;
 		}
-
 		// Remove empty trailing part if present
 		if (pathParts.len() > 0 && pathParts[pathParts.len()] == "" && !addTrailingSlash) pathParts.deleteAt(pathParts.len());
-
 		// Join parts to form permalink
 		prc.permalink = "/" & pathParts.toList("/");
 		if ( addTrailingSlash && right(prc.permalink,1) != "/" ) prc.permalink &= "/";
@@ -290,7 +283,6 @@ class {
 		var body = "";
 		var isBXM = fname.findNoCase(".bxm") ? true : false;
 		var lines = [];
-
 		// Read all lines from file
 		var openFile = fileOpen(fname, "read");
 		try {
@@ -302,7 +294,6 @@ class {
 		} finally {
 			fileClose(openFile);
 		}
-
 		// Detect front matter at start of file
 		var fmStart = !isBXM ? lines.find("---") : lines.find("<!---");
 		if (fmStart == 1) {
@@ -315,15 +306,15 @@ class {
 			// No front matter, treat all as body
 			body = arrayToList(lines, char(10));
 		}
-
 		// Flatten tags if nested array
 		if (payload.keyExists("tags") && isArray(payload.tags) && isArray(payload.tags[1])) {
 			payload.tags = payload.tags[1];
 		}
-
 		// Set content property, convert markdown if not BXM
 		payload["content"] = isBXM ? body : markdown(body);
-
+		// if(fname.find("boxlang-ssg.md")) {
+		// 	dump(payload); abort;
+		// }
 		return payload;
 	}
 
@@ -383,12 +374,10 @@ class {
 				}
 			}
 		});
-
 		// Special processing for posts
 		if (collections.keyExists("post")) {
 			// Sort posts by date descending
 			collections.post.sort((e1, e2) => dateCompare(e2.date, e1.date));
-
 			// Build tag list and byTag mapping
 			collections.post.each((post) => {
 				if (post.keyExists("tags")) {
@@ -427,7 +416,6 @@ class {
 						data = structKeyList( data ).listSort( "textnocase", "asc" ).listToArray();
 					}
 				}
-
 				// set the parent prc scope for the paginated templates
 				var parent_prc = duplicate( prc );
 				// If parent has no explicit permalink, base it on fileSlug
@@ -435,12 +423,9 @@ class {
 					parent_prc.permalink = "/" & parent_prc.fileSlug & "/";
 					getOutfile( parent_prc );
 				}
-
 				// ensure parent template is not rendered (mutate original entry)
 				prc.published = false;
-
 				var paged = paginate( data = data, pageSize = size );
-
 				// Precompute per-page permalinks for navigation
 				var pagePermalinks = [];
 				for ( var i = 1; i <= paged.len(); i++ ) {
@@ -450,7 +435,6 @@ class {
 					if ( size == 1 && isSimpleValue( pageVal ) ) {
 						candidate = candidate.replace( "{{" & targetKey & "}}", pageVal );
 					}
-
 					// If no placeholders present and this is a multi-item pagination,
 					// generate conventional "/page/<n>/" URLs for pages after the first
 					var hasPagePlaceholders = candidate.findNoCase( "{{page}}" ) || candidate.findNoCase( "{{pageNumber}}" );
@@ -458,14 +442,13 @@ class {
 						if ( right(candidate,1) != "/" ) candidate &= "/";
 						candidate &= "page/" & i & "/";
 					}
-
 					// Support page number placeholders
 					if ( candidate.findNoCase( "{{page}}" ) ) candidate = candidate.replace( "{{page}}", i );
 					if ( candidate.findNoCase( "{{pageNumber}}" ) ) candidate = candidate.replace( "{{pageNumber}}", i );
 					pagePermalinks[ i ] = candidate;
 				}
-					// Ensure the first page uses the parent's permalink only for multi-item pages
-					if ( paged.len() >= 1 && size > 1 && !parent_prc.permalink.findNoCase("{{") ) pagePermalinks[ 1 ] = parent_prc.permalink;
+				// Ensure the first page uses the parent's permalink only for multi-item pages
+				if ( paged.len() >= 1 && size > 1 && !parent_prc.permalink.findNoCase("{{") ) pagePermalinks[ 1 ] = parent_prc.permalink;
 
 				paged.each( ( page, index ) => {
 					var page_prc          = duplicate( parent_prc );
@@ -503,7 +486,7 @@ class {
 					) {
 						page_prc.append( structGet( prc.pagination.data )[ page ] );
 					}
-						getPermalink( page_prc );
+					getPermalink( page_prc );
 					// Inject pagination navigation info
 					var totalPages  = paged.len();
 					var totalItems  = isArray( data ) ? data.len() : 0;
@@ -625,11 +608,9 @@ class {
 		prc.append(templateData);
 		// Track if permalink was explicitly provided in front matter
 		prc._explicitPermalink = ( templateData.keyExists("permalink") && len(templateData.permalink) );
-
 		// Merge layout metadata if available, without overwriting
 		var layoutMeta = baseData.layouts.keyExists(prc.layout) ? baseData.layouts[prc.layout] : false;
 		if (layoutMeta) prc.append(duplicate(layoutMeta), false);
-
 		// Merge view metadata, prioritizing explicit view over type
 		var hasView = len(prc.view);
 		if (!hasView && baseData.views.keyExists(prc.type)) {
@@ -637,7 +618,6 @@ class {
 		} else if (hasView && baseData.views.keyExists(prc.view)) {
 			prc.append(duplicate(baseData.views[prc.view]), false);
 		}
-
 		// Only process if published is true
 		if (isBoolean(prc.published) && prc.published) {
 			// Build output file path initially
@@ -678,21 +658,17 @@ class {
 				if ( process.hasIncludes && process.views.find( prc.view ) && prc.layout != "none" ) {
 					// render the cfml in the template first
 					template =  prc.inFile;
-
 					bx:savecontent variable="prc.content" {
 						include template;
 					}
-
 					// overlay the view
 					template = cwd & "_includes/" & prc.view & ".bxm";
-
 					bx:savecontent variable="renderedHtml" {
 						include template;
 					}
 				} else {
 					// view was not found, just render the template
 					template =  prc.inFile ;
-
 					bx:savecontent variable="renderedHtml" {
 						include template;
 					}
@@ -701,7 +677,6 @@ class {
 
 			// template is markdown
 			if ( prc.inFile.findNoCase( ".md" ) ) {
-
 				if ( process.hasIncludes && process.views.find( prc.view ) && prc.layout != "none" ) {
 					template =  cwd & "_includes/" & prc.view & ".bxm";
 					bx:savecontent variable="renderedHtml" {
@@ -711,7 +686,6 @@ class {
 					renderedHtml = prc.content;
 				}
 			}
-
 			// skip layout if "none" is specified
 			if (
 				prc.layout != "none" &&
@@ -719,12 +693,10 @@ class {
 				process.layouts.find( prc.layout )
 			) {
 				template =  cwd & "_includes/layouts/" & prc.layout & ".bxm";
-
 				bx:savecontent variable="renderedHtml" {
 					include template;
 				}
 			}
-
 		} catch ( any e ) {
 			dump(prc);
 			printLn( "Error rendering template: " & e.message );

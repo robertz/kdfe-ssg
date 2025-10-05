@@ -1,7 +1,8 @@
 # Local Netlify folder
-.netlify
 _site/
-.idea
-.env
+.vscode/
+.logs/
 .DS_Store
+.netlify/
 node_modules/
+*.sh
